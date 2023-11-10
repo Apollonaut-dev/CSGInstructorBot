@@ -49,6 +49,11 @@ const PILOT_ROW = 2;
 const QUAL_COL = 1;
 
 const NON_DATA_ROWS = [13, 17, 20, 26, 35, 44, 45, 50, 59, 65, 70, 75, 82, 90, 122];
+const IQT_START = 4;
+const MCQ_START = 17;
+const CQ_START = 35;
+const CMQ_START = 44;
+
 
 // const present_pilots = ['Maj "Apollo" Dev (AOPS) 403'];
 // const pilot_modices = present_pilots.map(pilot => pilot.match());
@@ -110,7 +115,7 @@ const NON_DATA_ROWS = [13, 17, 20, 26, 35, 44, 45, 50, 59, 65, 70, 75, 82, 90, 1
   let entry;
   for (let i = 0; i < 5; i++) {
     entry = sorted[i];
-    console.log(`Qual: ${entry.qual}\nCount: ${entry.count}\n\t${entry.pilots.join(',\n\t')}`)
+    console.log(`Qual: ${entry.qual}\nCount: ${entry.count}\n\t${entry.pilots.join(', ')}\n`)
   }
   // console.log(qual_count_map);
   
