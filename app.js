@@ -97,12 +97,20 @@ const NON_DATA_ROWS = [13, 17, 20, 26, 35, 44, 45, 50, 59, 65, 70, 75, 82, 90, 1
       pilots: datum.pilots
     });
   }
-  let sorted = array.sort((a, b) => a.count <= b.count)
-  console.log(sorted)
+  
+  let sorted = array.sort((a, b) => {
+    if (a.count > b.count) {
+      return -1;
+    } else if (a.cont < b.count) {
+      return 1;
+    }
+    return 0
+  })
+  
   let entry;
   for (let i = 0; i < 5; i++) {
     entry = sorted[i];
-    console.log(`Qual: ${entry.qual}\nCount: ${entry.count}\n\t${entry.pilots.join('\n\t')}`)
+    console.log(`Qual: ${entry.qual}\nCount: ${entry.count}\n\t${entry.pilots.join(',\n\t')}`)
   }
   // console.log(qual_count_map);
   
