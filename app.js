@@ -67,14 +67,16 @@ app.post('/interactions', async function (req, res) {
       const sheet = doc.sheetsByIndex[0]; // or use `doc.sheetsById[id]` or `doc.sheetsByTitle[title]`
       console.log(sheet.title);
       console.log(sheet.rowCount);
-      const rows = await sheet.getRows(); // can pass in { limit, offset }
-      console.log(rows[2].get('F')); // 'Larry Page'
+      // const rows = await sheet.getRows(); // can pass in { limit, offset }
+      // const cells = await sheet.loadCells('A1:AA')
+      // const cell = sheet.getCell(3, 5);
+      // console.log(cell.value); // 'Larry Page'
       
       return res.send({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
         data: {
           // Fetches a random emoji to send from a helper function
-          content: 'hello world ' + rows[2].get('F'),
+          content: 'hello world',
         },
       });
     }
