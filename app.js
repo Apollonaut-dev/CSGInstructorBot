@@ -48,6 +48,8 @@ const DATA_COL_START = 2;
 const PILOT_ROW = 2;
 const QUAL_COL = 1;
 
+const NON_DATA_ROWS = [13, 17, 20, 26, 35, 44, 45, 50, 59, 65, 70, 75, 82, 90, 91, 94, 97, 100, 103, 106, 109, 112, 115, 118, ]
+
 
 (async function () {
   await doc.loadInfo(); // loads document properties and worksheets
@@ -67,7 +69,7 @@ const QUAL_COL = 1;
   for (let i = DATA_ROW_START; i < N_ROWS; i++) {
     qual = sheet.getCell(i, QUAL_COL).value
     quals.push(qual)
-    qual_count_map[qual] = 0;
+    qual_count_map[qual] = { count: 0, pilots: []};
   }
 
   let cell_value
@@ -77,13 +79,19 @@ const QUAL_COL = 1;
     for (let j = DATA_COL_START; j < N_COLS; j++) {
       cell_value = sheet.getCell(i, j).value
       if (cell_value == 'NOGO') {
-        qual_count_map[qual] += 1
+        qual_count_map[qual].count += 1
+        qual_count_map[qual].pilots.push(sheet.getCell(PILOT_ROW, j).value)
       }
     } 
   }
   
   pilots.forEach(ent => ent !== '' && console.log(ent))
   quals.forEach(ent => console.log(ent))
+  for (const [qual, datum] of Object.entries(qual_count_map)) {
+    if (qual === null) continue;
+    console.log(`${qual}: ${datum.count}`)
+    console.log(datum.pilots.join(', '))
+  }
   
 })();
 
