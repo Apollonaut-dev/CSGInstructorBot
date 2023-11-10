@@ -39,14 +39,20 @@ const doc = new GoogleSpreadsheet(
   serviceAccountAuth
 );
 
+const NCols = 27
+const NRows = 138
+
 (async function () {
   await doc.loadInfo(); // loads document properties and worksheets
   const sheet = doc.sheetsByIndex[0]; // or use `doc.sheetsById[id]` or `doc.sheetsByTitle[title]`
   console.log(sheet.title);
   const cells = await sheet.loadCells("A1:AA");
   const cell = sheet.getCell(3, 5);
+  const pilots = [];
+  
+  
   for (let i = 0; i < 10; i++) {
-    co
+    console.log(sheet.getCell(2, i).value)
   }
   console.log(cell.value); // 'Larry Page'
 })();
