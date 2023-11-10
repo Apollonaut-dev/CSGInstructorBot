@@ -50,6 +50,7 @@ const QUAL_COL = 1;
 
 const NON_DATA_ROWS = [13, 17, 20, 26, 35, 44, 45, 50, 59, 65, 70, 75, 82, 90, 91, 94, 97, 100, 103, 106, 109, 112, 115, 118, 121, 124, 127, 130, 133, 136];
 
+const present_pilots = ['Maj \']
 
 (async function () {
   await doc.loadInfo(); // loads document properties and worksheets
@@ -87,14 +88,15 @@ const NON_DATA_ROWS = [13, 17, 20, 26, 35, 44, 45, 50, 59, 65, 70, 75, 82, 90, 9
     } 
   }
   
-  // for (const [qual, datum] of Object.entries(qual_count_map)) {
-  //   if (qual === null) continue;
-  //   console.log(`${qual}: ${datum.count}`)
-  //   console.log(datum.pilots.join(', '))
-  // }
-  console.log(qual_count_map);
+  for (const [qual, datum] of Object.entries(qual_count_map)) {
+    if (qual === null) continue;
+    console.log(`${qual}: ${datum.count}`)
+    console.log(datum.pilots.join(', '))
+  }
+  // console.log(qual_count_map);
   
 })();
+
 
 /**
  * Interactions endpoint URL where Discord will send HTTP requests
