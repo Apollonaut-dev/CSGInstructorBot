@@ -18,9 +18,9 @@ function createCommandChoices() {
 }
 
 // Simple test command
-const TEST_COMMAND = {
-  name: "test",
-  description: "Basic command",
+const QUALS_COMMAND = {
+  name: "quals",
+  description: "Get list of quals the present members most need",
   type: 1,
 };
 
