@@ -39,8 +39,12 @@ const doc = new GoogleSpreadsheet(
   serviceAccountAuth
 );
 
-const NCols = 27
-const NRows = 138
+const N_COLS = 27;
+const DATA_COL_START = 2;
+const N_ROWS = 138;
+const PILOT_ROW = 2;
+const QUAL_COL = 1;
+const QUAL_ROW_START = 4;
 
 (async function () {
   await doc.loadInfo(); // loads document properties and worksheets
@@ -48,13 +52,19 @@ const NRows = 138
   console.log(sheet.title);
   const cells = await sheet.loadCells("A1:AA");
   const cell = sheet.getCell(3, 5);
+  
   const pilots = [];
-  
-  
-  for (let i = 0; i < 10; i++) {
-    console.log(sheet.getCell(2, i).value)
+  for (let i = DATA_COL_START; i < N_COLS; i++) {
+    pilots.push(sheet.getCell(PILOT_ROW, i).value.trim());
   }
-  console.log(cell.value); // 'Larry Page'
+  
+  const quals = [];
+  for (let i = QUAL_ROW_START; i < N_ROWS; i++) {
+    quals.push(sheet.getCell(i, QUAL_COL).value)
+  }
+  
+  pilots.forEach(ent => ent !== '' && console.log(ent))
+  quals.forEach(ent => console.log(ent))
 })();
 
 /**
