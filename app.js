@@ -50,7 +50,8 @@ const QUAL_COL = 1;
 
 const NON_DATA_ROWS = [13, 17, 20, 26, 35, 44, 45, 50, 59, 65, 70, 75, 82, 90, 91, 94, 97, 100, 103, 106, 109, 112, 115, 118, 121, 124, 127, 130, 133, 136];
 
-const present_pilots = ['Maj \']
+const present_pilots = ['Maj "Apollo" Dev (AOPS) 403'];
+const pilot_modices = present_pilots.map(pilot => pilot.match())
 
 (async function () {
   await doc.loadInfo(); // loads document properties and worksheets
