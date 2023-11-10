@@ -39,12 +39,15 @@ const doc = new GoogleSpreadsheet(
   serviceAccountAuth
 );
 
-const N_COLS = 27;
-const DATA_COL_START = 2;
 const N_ROWS = 138;
+const N_COLS = 27;
+
+const DATA_ROW_START = 4;
+const DATA_COL_START = 2;
+
 const PILOT_ROW = 2;
 const QUAL_COL = 1;
-const QUAL_ROW_START = 4;
+
 
 (async function () {
   await doc.loadInfo(); // loads document properties and worksheets
@@ -58,13 +61,30 @@ const QUAL_ROW_START = 4;
     pilots.push(sheet.getCell(PILOT_ROW, i).value.trim());
   }
   
+  const qual_count_map = {}
   const quals = [];
-  for (let i = QUAL_ROW_START; i < N_ROWS; i++) {
-    quals.push(sheet.getCell(i, QUAL_COL).value)
+  let qual;
+  for (let i = DATA_ROW_START; i < N_ROWS; i++) {
+    qual = sheet.getCell(i, QUAL_COL).value
+    quals.push(qual)
+    qual_count_map[qual] = 0;
+  }
+
+  let cell_value
+  qual = null
+  for (let i = DATA_ROW_START; i < N_ROWS; i++) {
+    qual = sheet.getCell(i, QUAL_COL).value
+    for (let j = DATA_COL_START; j < N_COLS; j++) {
+      cell_value = sheet.getCell(i, j).value
+      if (cell_value == 'NOGO') {
+        qual_count_map[qual] += 1
+      }
+    } 
   }
   
   pilots.forEach(ent => ent !== '' && console.log(ent))
   quals.forEach(ent => console.log(ent))
+  
 })();
 
 /**
