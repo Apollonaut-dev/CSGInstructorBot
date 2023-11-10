@@ -49,10 +49,12 @@ const PILOT_ROW = 2;
 const QUAL_COL = 1;
 
 const NON_DATA_ROWS = [13, 17, 20, 26, 35, 44, 45, 50, 59, 65, 70, 75, 82, 90, 122];
+
 const IQT_START = 4;
 const MCQ_START = 17;
 const CQ_START = 35;
 const CMQ_START = 44;
+const SUPPLEMENTAL_START = 90
 
 
 // const present_pilots = ['Maj "Apollo" Dev (AOPS) 403'];
@@ -71,6 +73,13 @@ const CMQ_START = 44;
   }
   
   const qual_count_map = {}
+  let active_count_map;
+  const IQT_qual_count_map = {}
+  const MCQ_qual_count_map = {}
+  const CQ_qual_count_map = {}
+  const CMQ_qual_count_map = {}
+  const supplemental_qual_count_map = {}
+  
   const quals = [];
   let qual;
   for (let i = DATA_ROW_START; i < N_ROWS; i++) {
@@ -85,6 +94,19 @@ const CMQ_START = 44;
   for (let i = DATA_ROW_START; i < N_ROWS; i++) {
     if (NON_DATA_ROWS.includes(i)) continue;
     qual = sheet.getCell(i, QUAL_COL).value
+    
+    if (IQT_START < i && i < MCQ_START) {
+      active_count_map = IQT_qual_count_map;
+    } else if (MCQ_START < i && i < CQ_START) {
+      active_count_map = MCQ_qual_count_map;
+    } else if (CQ_START < i && i < CMQ_START) {
+      active_count_map = CQ_qual_count_map;
+    } else if (CMQ_START < i && i < SUPPLEMENTAL_START) {
+      active_count_map = CMQ_qual_count_map;
+    } else if (SUPPLEMENTAL_START < i) {
+      active_count_map = 
+    }
+    
     for (let j = DATA_COL_START; j < N_COLS; j++) {
       cell_value = sheet.getCell(i, j).value
       if (cell_value == 'NOGO') {
