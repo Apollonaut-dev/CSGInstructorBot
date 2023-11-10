@@ -50,8 +50,8 @@ const QUAL_COL = 1;
 
 const NON_DATA_ROWS = [13, 17, 20, 26, 35, 44, 45, 50, 59, 65, 70, 75, 82, 90, 122];
 
-const present_pilots = ['Maj "Apollo" Dev (AOPS) 403'];
-const pilot_modices = present_pilots.map(pilot => pilot.match());
+// const present_pilots = ['Maj "Apollo" Dev (AOPS) 403'];
+// const pilot_modices = present_pilots.map(pilot => pilot.match());
 
 (async function () {
   await doc.loadInfo(); // loads document properties and worksheets
@@ -88,16 +88,21 @@ const pilot_modices = present_pilots.map(pilot => pilot.match());
       }
     } 
   }
-  const sorted = []
+  const array = []
   for (const [qual, datum] of Object.entries(qual_count_map)) {
     if (qual === null) continue;
-    sorted.push({
-      qual,
-      pilots: datum.pilots,
-      count: datum.counts
-    })
-    console.log(`${qual}: ${datum.count}`)
-    console.log(datum.pilots.join(', '))
+    array.push({
+      qual: qual,
+      count: datum.count,
+      pilots: datum.pilots
+    });
+  }
+  let sorted = array.sort((a, b) => a.count <= b.count)
+  console.log(sorted)
+  let entry;
+  for (let i = 0; i < 5; i++) {
+    entry = sorted[i];
+    console.log(`Qual: ${entry.qual}\nCount: ${entry.count}\n\t${entry.pilots.join('\n\t')}`)
   }
   // console.log(qual_count_map);
   
