@@ -44,6 +44,7 @@ app.post('/interactions', async function (req, res) {
     // "test" command
     if (name === 'quals') {
       // Send a message into the channel where command was triggered from
+      
       return res.send({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
         data: {
