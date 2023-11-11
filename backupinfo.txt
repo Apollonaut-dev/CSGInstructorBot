@@ -1,0 +1,2 @@
+INTERACTION ENDPOINT URL:
+https://therapeutic-discovered-geese.glitch.me/interactions

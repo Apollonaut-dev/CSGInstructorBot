@@ -46,6 +46,7 @@ const commandFiles = fs
   }
   console.log("mapped commands to client. registering interaction listener");
   client.on(Events.InteractionCreate, async (interaction) => {
+    
     console.log("handling interaction");
     if (!interaction.isChatInputCommand()) return;
     const command = interaction.client.commands.get(interaction.commandName);
