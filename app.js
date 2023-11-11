@@ -85,38 +85,100 @@ const present_modices = present_pilots.map(pilot => pilot.match(modex_regex));
   const quals = [];
   let qual;
   let pilot;
-  for (let i = DATA_ROW_START; i < N_ROWS; i++) {
+//   for (let i = DATA_ROW_START; i < N_ROWS; i++) {
+//     if (NON_DATA_ROWS.includes(i)) continue;
+//     qual = sheet.getCell(i, QUAL_COL).value
+    
+//     if (IQT_START <= i && i < MCQ_START) {
+//       active_count_map = IQT_qual_count_map;
+//     } else if (MCQ_START <= i && i < CQ_START) {
+//       active_count_map = MCQ_qual_count_map;
+//     } else if (CQ_START <= i && i < CMQ_START) {
+//       active_count_map = CQ_qual_count_map;
+//     } else if (CMQ_START <= i && i < SUPPLEMENTAL_START) {
+//       active_count_map = CMQ_qual_count_map;
+//     } else if (SUPPLEMENTAL_START <= i) {
+//       active_count_map = supplemental_qual_count_map;
+//     }
+    
+//     quals.push(qual)
+//     active_count_map[qual] = { count: 0, pilots: [] }
+    
+//     for (let j = DATA_COL_START; j < N_COLS; j++) {
+//       pilot = sheet.getCell(PILOT_ROW, j).value.match(modex_regex);
+//       // if (!present_modices.includes(pilot)) continue;
+//       cell_value = sheet.getCell(i, j).value
+//       if (cell_value == 'NOGO') {
+//         active_count_map[qual].count += 1
+//         active_count_map[qual].pilots.push(sheet.getCell(PILOT_ROW, j).value)
+//       } 
+//     } 
+//   }
+  
+  const needs_IQT = [];
+  for (let i = IQT_START; i < MCQ_START; i++) {
     if (NON_DATA_ROWS.includes(i)) continue;
-    qual = sheet.getCell(i, QUAL_COL).value
+    qual = sheet.getCell(i, QUAL_COL).value;
     
-    if (IQT_START <= i && i < MCQ_START) {
-      active_count_map = IQT_qual_count_map;
-    } else if (MCQ_START <= i && i < CQ_START) {
-      active_count_map = MCQ_qual_count_map;
-    } else if (CQ_START <= i && i < CMQ_START) {
-      active_count_map = CQ_qual_count_map;
-    } else if (CMQ_START <= i && i < SUPPLEMENTAL_START) {
-      active_count_map = CMQ_qual_count_map;
-    } else if (SUPPLEMENTAL_START <= i) {
-      active_count_map = supplemental_qual_count_map;
-    }
-    
-    quals.push(qual)
-    active_count_map[qual] = { count: 0, pilots: [] }
+    quals.push(qual);
+    IQT_qual_count_map[qual] = { count: 0, pilots: [] };
     
     for (let j = DATA_COL_START; j < N_COLS; j++) {
       pilot = sheet.getCell(PILOT_ROW, j).value.match(modex_regex);
       // if (!present_modices.includes(pilot)) continue;
-      cell_value = sheet.getCell(i, j).value
+      
+      cell_value = sheet.getCell(i, j).value;
       if (cell_value == 'NOGO') {
-        active_count_map[qual].count += 1
-        active_count_map[qual].pilots.push(sheet.getCell(PILOT_ROW, j).value)
+        if (!needs_IQT.includes(pilot)) needs_IQT.push(pilot);
+        IQT_qual_count_map[qual].count += 1;
+        IQT_qual_count_map[qual].pilots.push(sheet.getCell(PILOT_ROW, j).value);
       } 
     } 
   }
   
-  for (let i = IQT_START; i < MCQ_START) {
+  const needs_MCQ = [];
+  for (let i = MCQ_START; i < CQ_START; i++) {
+    if (NON_DATA_ROWS.includes(i)) continue;
+    qual = sheet.getCell(i, QUAL_COL).value
     
+    quals.push(qual);
+    MCQ_qual_count_map[qual] = { count: 0, pilots: [] };
+    
+    for (let j = DATA_COL_START; j < N_COLS; j++) {
+      pilot = sheet.getCell(PILOT_ROW, j).value.match(modex_regex);
+      // if (!present_modices.includes(pilot)) continue;
+      if (needs_IQT.includes(pilot)) continue;
+      
+      cell_value = sheet.getCell(i, j).value;
+      if (cell_value == 'NOGO') {
+        if (!needs_MCQ.includes(pilot)) needs_MCQ.push(pilot);
+        MCQ_qual_count_map[qual].count += 1;
+        MCQ_qual_count_map[qual].pilots.push(sheet.getCell(PILOT_ROW, j).value);
+      } 
+    }
+  }
+  
+  const needs_CMQ = [];
+  for (let i = CMQ_START; i < SUPPLEMENTAL_START; i++ ) {
+    if (NON_DATA_ROWS.includes(i)) continue;
+    qual = sheet.getCell(i, QUAL_COL).value
+    
+    quals.push(qual);
+    CMQ_qual_count_map[qual] = { count: 0, pilots: [] };
+    
+    for (let j = DATA_COL_START; j < N_COLS; j++) {
+      pilot = sheet.getCell(PILOT_ROW, j).value.match(modex_regex);
+      // if (!present_modices.includes(pilot)) continue;
+      if (needs_IQT.includes(pilot)) continue;
+      if (needs_MCQ.includes(pilot)) continue;
+      
+      cell_value = sheet.getCell(i, j).value;
+      if (cell_value == 'NOGO') {
+        if (!needs_CMQ.includes(pilot)) needs_MCQ.push(pilot);
+        CMQ_qual_count_map[qual].count += 1;
+        CMQ_qual_count_map[qual].pilots.push(sheet.getCell(PILOT_ROW, j).value);
+      } 
+    }
   }
   
   const qual_report_comparator = (a, b) => {
@@ -173,7 +235,7 @@ const present_modices = present_pilots.map(pilot => pilot.match(modex_regex));
   let entry;
   for (let i = 0; i < 5; i++) {
     entry = sorted[i];
-    report_string += `\t${entry.qual}\n\t${entry.count} -- \t${entry.pilots.join(', ')}\n`
+    report_string += `\t${entry.qual}\n\t${entry.count} -- Eligible: \t${entry.pilots.join(', ')}\n`
   }
   
   // CMQ Checkrides
@@ -193,7 +255,7 @@ const present_modices = present_pilots.map(pilot => pilot.match(modex_regex));
   sorted = array.sort(qual_report_comparator);
   for (let i = 0; i < 5; i++) {
     entry = sorted[i];
-    report_string += `${entry.qual}\n\t${entry.count} -- \t${entry.pilots.join(', ')}\n`
+    report_string += `\t${entry.qual}\n\t${entry.count} -- Eligible: \t${entry.pilots.join(', ')}\n`
   }
   // console.log(qual_count_map);
   console.log(report_string);
