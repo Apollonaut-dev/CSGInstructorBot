@@ -16,7 +16,11 @@ const commandFiles = fs
 (async function () {
   console.log("Hello world");
 
-  const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+  const client = new Client({ intents: [
+    GatewayIntentBits.Guilds,
+		GatewayIntentBits.GuildMessages,
+		GatewayIntentBits.GuildMembers
+  ]});
 
   client.once(Events.ClientReady, (c) => {
     console.log(`Ready! Logged in as ${c.user.tag}`);
@@ -69,3 +73,4 @@ const commandFiles = fs
     }
   });
 })();
+
