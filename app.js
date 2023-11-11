@@ -54,11 +54,12 @@ const IQT_START = 4;
 const MCQ_START = 17;
 const CQ_START = 35;
 const CMQ_START = 44;
-const SUPPLEMENTAL_START = 90
+const SUPPLEMENTAL_START = 90;
 
 
-// const present_pilots = ['Maj "Apollo" Dev (AOPS) 403'];
-// const pilot_modices = present_pilots.map(pilot => pilot.match());
+const present_pilots = ['Maj "Apollo" Dev (AOPS) 403'];
+const modex_regex = /\d{2,3}$/gm
+const present_modices = present_pilots.map(pilot => pilot.match(modex_regex));
 
 (async function () {
   await doc.loadInfo(); // loads document properties and worksheets
@@ -80,43 +81,40 @@ const SUPPLEMENTAL_START = 90
   const CMQ_qual_count_map = {}
   const supplemental_qual_count_map = {}
   
+  let cell_value
   const quals = [];
   let qual;
-  for (let i = DATA_ROW_START; i < N_ROWS; i++) {
-    if (NON_DATA_ROWS.includes(i)) continue;
-    qual = sheet.getCell(i, QUAL_COL).value
-    quals.push(qual)
-    qual_count_map[qual] = { count: 0, pilots: []};
-  }
-
-  let cell_value
-  qual = null
+  let pilot;
   for (let i = DATA_ROW_START; i < N_ROWS; i++) {
     if (NON_DATA_ROWS.includes(i)) continue;
     qual = sheet.getCell(i, QUAL_COL).value
     
-    if (IQT_START < i && i < MCQ_START) {
+    if (IQT_START <= i && i < MCQ_START) {
       active_count_map = IQT_qual_count_map;
-    } else if (MCQ_START < i && i < CQ_START) {
+    } else if (MCQ_START <= i && i < CQ_START) {
       active_count_map = MCQ_qual_count_map;
-    } else if (CQ_START < i && i < CMQ_START) {
+    } else if (CQ_START <= i && i < CMQ_START) {
       active_count_map = CQ_qual_count_map;
-    } else if (CMQ_START < i && i < SUPPLEMENTAL_START) {
+    } else if (CMQ_START <= i && i < SUPPLEMENTAL_START) {
       active_count_map = CMQ_qual_count_map;
-    } else if (SUPPLEMENTAL_START < i) {
-      active_count_map = 
+    } else if (SUPPLEMENTAL_START <= i) {
+      active_count_map = supplemental_qual_count_map;
     }
     
+    quals.push(qual)
+    active_count_map[qual] = { count: 0, pilots: [] }
+    
     for (let j = DATA_COL_START; j < N_COLS; j++) {
+      pilot = sheet.getCell(PILOT_ROW, j).value
       cell_value = sheet.getCell(i, j).value
       if (cell_value == 'NOGO') {
-        qual_count_map[qual].count += 1
-        qual_count_map[qual].pilots.push(sheet.getCell(PILOT_ROW, j).value)
+        active_count_map[qual].count += 1
+        active_count_map[qual].pilots.push(sheet.getCell(PILOT_ROW, j).value)
       }
     } 
   }
   const array = []
-  for (const [qual, datum] of Object.entries(qual_count_map)) {
+  for (const [qual, datum] of Object.entries(IQT_qual_count_map)) {
     if (qual === null) continue;
     array.push({
       qual: qual,
