@@ -83,8 +83,10 @@ const present_modices = present_pilots.map(pilot => pilot.match(modex_regex));
   
   let cell_value
   const quals = [];
+  // loop variables
   let qual;
-  let pilot;
+  let pilot_str;;
+  let pilot_modex;
 //   for (let i = DATA_ROW_START; i < N_ROWS; i++) {
 //     if (NON_DATA_ROWS.includes(i)) continue;
 //     qual = sheet.getCell(i, QUAL_COL).value
@@ -124,17 +126,22 @@ const present_modices = present_pilots.map(pilot => pilot.match(modex_regex));
     IQT_qual_count_map[qual] = { count: 0, pilots: [] };
     
     for (let j = DATA_COL_START; j < N_COLS; j++) {
-      pilot = sheet.getCell(PILOT_ROW, j).value.match(modex_regex);
+      pilot_str = sheet.getCell(PILOT_ROW, j).value;
+      pilot_modex = Number(pilot_str.match(modex_regex));
       // if (!present_modices.includes(pilot)) continue;
       
       cell_value = sheet.getCell(i, j).value;
       if (cell_value == 'NOGO') {
-        if (!needs_IQT.includes(pilot)) needs_IQT.push(pilot);
+        if (!needs_IQT.includes(pilot_modex)) needs_IQT.push(pilot_modex);
+        
         IQT_qual_count_map[qual].count += 1;
-        IQT_qual_count_map[qual].pilots.push(sheet.getCell(PILOT_ROW, j).value);
+        IQT_qual_count_map[qual].pilots.push(pilot_str);
       } 
     } 
   }
+  
+  console.log('needs IQT:')
+  console.log(needs_IQT)
   
   const needs_MCQ = [];
   for (let i = MCQ_START; i < CQ_START; i++) {
@@ -145,9 +152,10 @@ const present_modices = present_pilots.map(pilot => pilot.match(modex_regex));
     MCQ_qual_count_map[qual] = { count: 0, pilots: [] };
     
     for (let j = DATA_COL_START; j < N_COLS; j++) {
-      pilot = sheet.getCell(PILOT_ROW, j).value.match(modex_regex);
+      pilot_str = sheet.getCell(PILOT_ROW, j).value;
+      pilot_modex = Number(pilot_str.match(modex_regex));
       // if (!present_modices.includes(pilot)) continue;
-      if (needs_IQT.includes(pilot)) continue;
+      if (needs_IQT.includes(pilot_moe)) continue;
       
       cell_value = sheet.getCell(i, j).value;
       if (cell_value == 'NOGO') {
