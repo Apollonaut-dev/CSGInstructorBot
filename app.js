@@ -115,6 +115,10 @@ const present_modices = present_pilots.map(pilot => pilot.match(modex_regex));
     } 
   }
   
+  for (let i = IQT_START; i < MCQ_START) {
+    
+  }
+  
   const qual_report_comparator = (a, b) => {
     if (a.count > b.count) {
       return -1;
@@ -124,13 +128,12 @@ const present_modices = present_pilots.map(pilot => pilot.match(modex_regex));
     return 0
   }
   
-  const report_string = '';
+  let report_string = '<<<<<<< BENGALS TRAINING REPORT >>>>>>>\n\n';
   // IQT handling
   // tbh I think it is sufficient to report IQT checkrides only
-  r
+  report_string += '======= IQT Report =======\n'
   const IQT_checkride = IQT_qual_count_map['IQT Check Ride']
-  console.log('======= IQT Report =======')
-  console.log(`IQT checkride: ${IQT_checkride.count}\n\t${IQT_checkride.pilots.join(', ')}`)
+  report_string += `IQT checkride: ${IQT_checkride.count}\n\t${IQT_checkride.pilots.join(', ')}\n`; 
   let array 
   // array = []
   // for (const [qual, datum] of Object.entries(IQT_qual_count_map)) {
@@ -151,13 +154,15 @@ const present_modices = present_pilots.map(pilot => pilot.match(modex_regex));
   // MCQ checkrides
   const MCQ_checkride_day = MCQ_qual_count_map['MCQ Check Ride (Day IFR)']
   const MCQ_checkride_night = MCQ_qual_count_map['MCQ Check Ride (Night)']
-  console.log('======= MCQ Report =======')
-  console.log(`MCQ Checkride (Day IFR): ${MCQ_checkride_day.count}\n\t${MCQ_checkride_day.pilots.join(', ')}`)
-  console.log(`MCQ Checkride (Night): ${MCQ_checkride_night.count}\n\t${MCQ_checkride_night.pilots.join(', ')}`)
-  console.log('Breakdown:')
+  report_string += '\n======= MCQ Report =======\n';
+  report_string += `MCQ Checkride (Day IFR): ${MCQ_checkride_day.count}\n\t${MCQ_checkride_day.pilots.join(', ')}\n`;
+  report_string += `MCQ Checkride (Night): ${MCQ_checkride_night.count}\n\t${MCQ_checkride_night.pilots.join(', ')}\n`;
+  report_string += '\nBreakdown: \n'
+  
   array = []
   for (const [qual, datum] of Object.entries(MCQ_qual_count_map)) {
     if (qual === null) continue;
+    if (datum.count == 0) continue;
     array.push({
       qual: qual,
       count: datum.count,
@@ -168,7 +173,27 @@ const present_modices = present_pilots.map(pilot => pilot.match(modex_regex));
   let entry;
   for (let i = 0; i < 5; i++) {
     entry = sorted[i];
-    console.log(`\tQual: ${entry.qual}\n\tCount: ${entry.count}\n\t\t${entry.pilots.join(', ')}`)
+    report_string += `\t${entry.qual}\n\t${entry.count} -- \t${entry.pilots.join(', ')}\n`
+  }
+  
+  // CMQ Checkrides
+  report_string += '\n======= CMQ Report =======\n';
+  report_string += 'Breakdown: \n'
+  
+  array = []
+  for (const [qual, datum] of Object.entries(CMQ_qual_count_map)) {
+    if (qual === null) continue;
+    if (datum.count == 0) continue;
+    array.push({
+      qual: qual,
+      count: datum.count,
+      pilots: datum.pilots
+    });
+  }
+  sorted = array.sort(qual_report_comparator);
+  for (let i = 0; i < 5; i++) {
+    entry = sorted[i];
+    report_string += `${entry.qual}\n\t${entry.count} -- \t${entry.pilots.join(', ')}\n`
   }
   // console.log(qual_count_map);
   console.log(report_string);
