@@ -327,9 +327,9 @@ app.post("/interactions", async function (req, res) {
       // Send a message into the channel where command was triggered from
 
       // const endpoint = `webhooks/${process.env.APP_ID}/${req.body.token}/messages/${req.body.message.id}`;
-      const endpoint = `webhooks/${process.env.APP_ID}/${req.body.token}/channels/1172378718853935138/thread-members`;
+      // const endpoint = `https://discord.com/api/${process.env.APP_ID}/channels/1172378718853935138/thread-members`;
       // const endpoint = `https://therapeutic-discovered-geese.glitch.me/channels/1172378718853935138/thread-members`;
-      // const endpoint = `${process.env.APP_ID}/channels/1172378718853935138/thread-members`;
+      const endpoint = `/channels/1172378718853935138/thread-members`;
       try {
         let variable = await DiscordRequest(endpoint, { method: 'GET'});
         console.log('variable: ');
