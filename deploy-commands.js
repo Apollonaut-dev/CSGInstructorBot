@@ -5,3 +5,5 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const commands;
+
+const foldersPath=path.join(__dirname, 'commands');
