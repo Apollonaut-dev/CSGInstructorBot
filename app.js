@@ -57,7 +57,7 @@ const CMQ_START = 44;
 const SUPPLEMENTAL_START = 90;
 
 
-const present_pilots = ['Maj "Apollo" Dev (AOPS) 403'];
+const present_pilots = ['Maj "Apollo" Dev (AOPS) 403', '412', '413', '415', '416', '417', '451', '452'];
 const modex_regex = /\d{2,3}$/gm
 const present_modices = present_pilots.map(pilot => pilot.match(modex_regex));
 
@@ -114,7 +114,23 @@ const present_modices = present_pilots.map(pilot => pilot.match(modex_regex));
       } 
     } 
   }
-  const array = []
+  
+  const qual_report_comparator = (a, b) => {
+    if (a.count > b.count) {
+      return -1;
+    } else if (a.cont < b.count) {
+      return 1;
+    }
+    return 0
+  }
+  
+  
+  // IQT handling
+  const IQT_checkride = IQT_qual_count_map['IQT Check Ride']
+  console.log('======= IQT Report =======')
+  console.log(`IQT checkride: ${IQT_checkride.count}\n\t${IQT_checkride.pilots.join(', ')}`)
+  let array 
+  array = []
   for (const [qual, datum] of Object.entries(IQT_qual_count_map)) {
     if (qual === null) continue;
     array.push({
@@ -123,16 +139,7 @@ const present_modices = present_pilots.map(pilot => pilot.match(modex_regex));
       pilots: datum.pilots
     });
   }
-  
-  let sorted = array.sort((a, b) => {
-    if (a.count > b.count) {
-      return -1;
-    } else if (a.cont < b.count) {
-      return 1;
-    }
-    return 0
-  })
-  
+  let sorted = array.sort(qual_report_comparator);
   let entry;
   for (let i = 0; i < 5; i++) {
     entry = sorted[i];
