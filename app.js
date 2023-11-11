@@ -57,7 +57,7 @@ const CMQ_START = 44;
 const SUPPLEMENTAL_START = 90;
 
 
-const present_pilots = ['Maj "Apollo" Dev (AOPS) 403', '412', '413', '415', '416', '417', '451', '452'];
+const present_pilots = ['Maj "Apollo" Dev (AOPS) 403', '412', '413', '415', '416', '417', '451', '452', '454', '455', '456', '456'];
 const modex_regex = /\d{2,3}$/gm
 const present_modices = present_pilots.map(pilot => pilot.match(modex_regex));
 
@@ -106,7 +106,7 @@ const present_modices = present_pilots.map(pilot => pilot.match(modex_regex));
     
     for (let j = DATA_COL_START; j < N_COLS; j++) {
       pilot = sheet.getCell(PILOT_ROW, j).value.match(modex_regex);
-      if (!present_modices.includes(pilot)) continue;
+      // if (!present_modices.includes(pilot)) continue;
       cell_value = sheet.getCell(i, j).value
       if (cell_value == 'NOGO') {
         active_count_map[qual].count += 1
@@ -124,14 +124,39 @@ const present_modices = present_pilots.map(pilot => pilot.match(modex_regex));
     return 0
   }
   
-  
+  const report_string = '';
   // IQT handling
+  // tbh I think it is sufficient to report IQT checkrides only
+  r
   const IQT_checkride = IQT_qual_count_map['IQT Check Ride']
   console.log('======= IQT Report =======')
   console.log(`IQT checkride: ${IQT_checkride.count}\n\t${IQT_checkride.pilots.join(', ')}`)
   let array 
+  // array = []
+  // for (const [qual, datum] of Object.entries(IQT_qual_count_map)) {
+  //   if (qual === null) continue;
+  //   array.push({
+  //     qual: qual,
+  //     count: datum.count,
+  //     pilots: datum.pilots
+  //   });
+  // }
+  // let sorted = array.sort(qual_report_comparator);
+  // let entry;
+  // for (let i = 0; i < 5; i++) {
+  //   entry = sorted[i];
+  //   console.log(`Qual: ${entry.qual}\nCount: ${entry.count}\n\t${entry.pilots.join(', ')}\n`)
+  // }
+  
+  // MCQ checkrides
+  const MCQ_checkride_day = MCQ_qual_count_map['MCQ Check Ride (Day IFR)']
+  const MCQ_checkride_night = MCQ_qual_count_map['MCQ Check Ride (Night)']
+  console.log('======= MCQ Report =======')
+  console.log(`MCQ Checkride (Day IFR): ${MCQ_checkride_day.count}\n\t${MCQ_checkride_day.pilots.join(', ')}`)
+  console.log(`MCQ Checkride (Night): ${MCQ_checkride_night.count}\n\t${MCQ_checkride_night.pilots.join(', ')}`)
+  console.log('Breakdown:')
   array = []
-  for (const [qual, datum] of Object.entries(IQT_qual_count_map)) {
+  for (const [qual, datum] of Object.entries(MCQ_qual_count_map)) {
     if (qual === null) continue;
     array.push({
       qual: qual,
@@ -143,9 +168,10 @@ const present_modices = present_pilots.map(pilot => pilot.match(modex_regex));
   let entry;
   for (let i = 0; i < 5; i++) {
     entry = sorted[i];
-    console.log(`Qual: ${entry.qual}\nCount: ${entry.count}\n\t${entry.pilots.join(', ')}\n`)
+    console.log(`\tQual: ${entry.qual}\n\tCount: ${entry.count}\n\t\t${entry.pilots.join(', ')}`)
   }
   // console.log(qual_count_map);
+  console.log(report_string);
   
 })();
 
