@@ -11,7 +11,7 @@
     "start": "node index.js",
     "app": "node app.js",
     "register": "node commands.js",
-    "dev": "nodemon app.js"
+    "dev": "nodemon index.js"
   },
   "author": "Shay DeWael",
   "license": "MIT",
