@@ -329,7 +329,7 @@ app.post("/interactions", async function (req, res) {
       // const endpoint = `webhooks/${process.env.APP_ID}/${req.body.token}/messages/${req.body.message.id}`;
       // const endpoint = `https://discord.com/api/${process.env.APP_ID}/channels/1172378718853935138/thread-members`;
       // const endpoint = `https://therapeutic-discovered-geese.glitch.me/channels/1172378718853935138/thread-members`;
-      const endpoint = `/channels/1172378718853935138/thread-members`;
+      const endpoint = `/?client_id=1172375350408396851&permissions=1024&scope=bot/channels/1172378718853935138/thread-members`;
       try {
         let variable = await DiscordRequest(endpoint, { method: 'GET'});
         console.log('variable: ');
