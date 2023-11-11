@@ -2,10 +2,9 @@ import "dotenv/config";
 import { InstallGlobalCommands } from "./utils.js";
 
 
-
 // Simple test command
 const QUALS_COMMAND = {
-  name: "qual-report",
+  name: "quals",
   description: "Get list of quals the present members most need",
   type: 1,
 };
