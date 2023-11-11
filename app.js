@@ -299,7 +299,7 @@ const present_modices = present_pilots.map((pilot) =>
     } -- Eligible: \t${entry.pilots.join(", ")}\n`;
   }
 
-  console.log(report_string);
+  // console.log(report_string);
 })();
 
 /**
@@ -326,14 +326,17 @@ app.post("/interactions", async function (req, res) {
     if (name === "quals") {
       // Send a message into the channel where command was triggered from
 
+      // const endpoint = `webhooks/${process.env.APP_ID}/${req.body.token}/messages/${req.body.message.id}`;
       const endpoint = `webhooks/${process.env.APP_ID}/${req.body.token}/channels/1172378718853935138/thread-members`;
-
+      // const endpoint = `https://therapeutic-discovered-geese.glitch.me/channels/1172378718853935138/thread-members`;
+      // const endpoint = `${process.env.APP_ID}/channels/1172378718853935138/thread-members`;
       try {
         let variable = await DiscordRequest(endpoint, { method: 'GET'});
         console.log('variable: ');
         console.log(variable);
       } catch (err) {
         console.error("Error getting member list");
+        console.error(err)
       }
 
       return res.send({
