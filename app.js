@@ -105,12 +105,13 @@ const present_modices = present_pilots.map(pilot => pilot.match(modex_regex));
     active_count_map[qual] = { count: 0, pilots: [] }
     
     for (let j = DATA_COL_START; j < N_COLS; j++) {
-      pilot = sheet.getCell(PILOT_ROW, j).value
+      pilot = sheet.getCell(PILOT_ROW, j).value.match(modex_regex);
+      if (!present_modices.includes(pilot)) continue;
       cell_value = sheet.getCell(i, j).value
       if (cell_value == 'NOGO') {
         active_count_map[qual].count += 1
         active_count_map[qual].pilots.push(sheet.getCell(PILOT_ROW, j).value)
-      }
+      } 
     } 
   }
   const array = []
