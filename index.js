@@ -40,3 +40,7 @@ const commandFiles = fs
     }
   }
 })();
+
+client.on(Events.InteractionCreate, interactions => {
+  console.log(interaction)
+})
