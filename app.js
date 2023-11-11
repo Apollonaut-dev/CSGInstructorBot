@@ -62,6 +62,10 @@ const modex_regex = /\d{2,3}$/gm
 const present_modices = present_pilots.map(pilot => Number(pilot.match(modex_regex)));
 
 (async function () {
+  
+  const BengalsReadyRoom = bot.channels['1172378718853935138'];
+  
+  
   await doc.loadInfo(); // loads document properties and worksheets
   const sheet = doc.sheetsByIndex[0]; // or use `doc.sheetsById[id]` or `doc.sheetsByTitle[title]`
   console.log(sheet.title);
