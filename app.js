@@ -57,7 +57,7 @@ const CMQ_START = 44;
 const SUPPLEMENTAL_START = 90;
 
 
-const present_pilots = ['Maj "Apollo" Dev (AOPS) 403', '412', '454', '455', '456', '456'];
+const present_pilots = ['Maj "Apollo" Dev (AOPS) 403', '412', '454', '455', '456', '400', '401', '402', '404', '405', '406', '407', '410', '411', '414', '415', '416', '417', '450', '451', '452', '453', '456', '457', '460'];
 const modex_regex = /\d{2,3}$/gm
 const present_modices = present_pilots.map(pilot => Number(pilot.match(modex_regex)));
 
@@ -202,7 +202,6 @@ const present_modices = present_pilots.map(pilot => Number(pilot.match(modex_reg
   report_string += '\n======= MCQ Report =======\n';
   report_string += `MCQ Checkride (Day IFR): ${MCQ_checkride_day.count}\n\t${MCQ_checkride_day.pilots.join(', ')}\n`;
   report_string += `MCQ Checkride (Night): ${MCQ_checkride_night.count}\n\t${MCQ_checkride_night.pilots.join(', ')}\n`;
-  report_string += '\nBreakdown: \n'
   
   array = []
   for (const [qual, datum] of Object.entries(MCQ_qual_count_map)) {
@@ -216,14 +215,13 @@ const present_modices = present_pilots.map(pilot => Number(pilot.match(modex_reg
   }
   let sorted = array.sort(qual_report_comparator);
   let entry;
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < Math.min(sorted.length, 5); i++) {
     entry = sorted[i];
     report_string += `\t${entry.qual}\n\t${entry.count} -- Eligible: \t${entry.pilots.join(', ')}\n`
   }
   
   // CMQ 
   report_string += '\n======= CMQ Report =======\n';
-  report_string += 'Breakdown: \n'
   
   array = []
   for (const [qual, datum] of Object.entries(CMQ_qual_count_map)) {
@@ -236,14 +234,13 @@ const present_modices = present_pilots.map(pilot => Number(pilot.match(modex_reg
     });
   }
   sorted = array.sort(qual_report_comparator);
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < Math.min(sorted.length, 5); i++) {
     entry = sorted[i];
     report_string += `\t${entry.qual}\n\t${entry.count} -- Eligible: \t${entry.pilots.join(', ')}\n`
   }
   
   // Supplemental
   report_string += '\n======= Supplementals =======\n';
-  report_string += 'Breakdown: \n'
   
   array = []
   for (const [qual, datum] of Object.entries(supplemental_qual_count_map)) {
@@ -256,11 +253,10 @@ const present_modices = present_pilots.map(pilot => Number(pilot.match(modex_reg
     });
   }
   sorted = array.sort(qual_report_comparator);
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < Math.min(sorted.length, 5); i++) {
     entry = sorted[i];
     report_string += `\t${entry.qual}\n\t${entry.count} -- Eligible: \t${entry.pilots.join(', ')}\n`
   }
-  
   
   console.log(report_string);
   
