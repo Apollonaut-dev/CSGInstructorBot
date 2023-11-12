@@ -1,13 +1,8 @@
 import { GoogleSpreadsheet } from "google-spreadsheet";
-import serviceAccountAuth from '../services/google.js';
+import serviceAccountAuth from "../services/google.js";
 
-const GoogleSheetID_224 = "1G58gg-BKW-fpYPudBMDZztFism5FJ_OME9kvzvjxm2w";
-
-const doc = new GoogleSpreadsheet(
-  GoogleSheetID_224,
-  serviceAccountAuth
-);
-
+const GOOGLE_SHEET_ID_224 = "1G58gg-BKW-fpYPudBMDZztFism5FJ_OME9kvzvjxm2w";
+const TRAINING_SHEET_INDEX = 0;
 
 const N_ROWS = 138;
 const N_COLS = 27;
@@ -35,7 +30,25 @@ const modex_regex = /\d{2,3}$/gm;
 //   Number(pilot.match(modex_regex))
 // );
 
-export default async function 
+// @param string[] present_modices -- array of strings containing 2-3 digit modices of each pilot present in the 224 Ready Room at the time of execution
+// @returns string -- containing the generated report TODO consider returning an object so it can be formatted with discord message components
+export default async function generate(present_modices) {
+  const doc = new GoogleSpreadsheet(
+    GOOGLE_SHEET_ID_224, 
+    serviceAccountAuth
+  );
+  await doc.loadInfo(); // loads document properties and worksheets
+  const sheet = doc.sheetsByIndex[TRAINING_SHEET_INDEX]; // or use `doc.sheetsById[id]` or `doc.sheetsByTitle[title]`
+  // grab all cells now since we'll need to check (almost) all of them
+  const cells = await sheet.loadCells("A1:AA");
+  
+  // get current pilot name strings from the pilot header row
+  const pilots = [];
+  for (let i = DATA_COL_START; i < N_COLS; i++) {
+    pilots.push(sheet.getCell(PILOT_ROW, i).value.trim());
+  }
+  
+}
 
 (async function () {
   await doc.loadInfo(); // loads document properties and worksheets
@@ -50,7 +63,7 @@ export default async function
   }
 
   const qual_count_map = {};
-  let active_count_map;
+  
   const IQT_qual_count_map = {};
   const MCQ_qual_count_map = {};
   const CQ_qual_count_map = {};
