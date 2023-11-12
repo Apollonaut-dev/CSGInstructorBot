@@ -7,13 +7,6 @@ import path from "node:path";
 
 import { fileURLToPath } from "url";
 
-import * as BengalReport from './data/qual-report-224.js';
-
-(async function() {
-  const report = await BengalReport.generate(['Apollo 403', 'Cyborg 402', 'Atorius 406', 'Rogue 456', '460']);
-  console.log(report);
-})();
-
 // get list of filenames of modules which implement slash commands
 // should create subfolders if this gets too big
 const __filename = fileURLToPath(import.meta.url);
@@ -27,7 +20,7 @@ const commandFiles = fs
 
 // init bot client
 (async function () {
-  console.log("Hello world");
+  console.log("Initializing ReportBot");
 
   const client = new Client({ intents: [
     GatewayIntentBits.Guilds,

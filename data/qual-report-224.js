@@ -4,6 +4,8 @@ import serviceAccountAuth from "../services/google.js";
 const GOOGLE_SHEET_ID_224 = "1G58gg-BKW-fpYPudBMDZztFism5FJ_OME9kvzvjxm2w";
 const TRAINING_SHEET_INDEX = 0;
 
+const modex_regex = /\d{2,3}$/gm;
+
 const N_ROWS = 138;
 const N_COLS = 27;
 
@@ -23,12 +25,6 @@ const SUPPLEMENTAL_START = 90;
 const NON_DATA_ROWS = [
   13, 17, 20, 26, 35, 44, 45, 50, 59, 65, 70, 75, 82, 90, 122,
 ];
-
-// regex to extract modices from pilot name strings -- just grabs digits at the end of the string, between 2 and 3
-const modex_regex = /\d{2,3}$/gm;
-// const present_modices = present_pilots.map((pilot) =>
-//   Number(pilot.match(modex_regex))
-// );
 
 // comparator for sorting stratified qual lists by number of people unqual'd
 const qual_report_comparator = (a, b) => {
