@@ -30,53 +30,48 @@ const modex_regex = /\d{2,3}$/gm;
 //   Number(pilot.match(modex_regex))
 // );
 
+// comparator for sorting stratified qual lists by number of people unqual'd
+const qual_report_comparator = (a, b) => {
+  if (a.count > b.count) {
+    return -1;
+  } else if (a.count < b.count) {
+    return 1;
+  }
+  return 0;
+};
+
 // @param string[] present_modices -- array of strings containing 2-3 digit modices of each pilot present in the 224 Ready Room at the time of execution
 // @returns string -- containing the generated report TODO consider returning an object so it can be formatted with discord message components
 export default async function generate(present_modices) {
-  const doc = new GoogleSpreadsheet(
-    GOOGLE_SHEET_ID_224, 
-    serviceAccountAuth
-  );
+  const doc = new GoogleSpreadsheet(GOOGLE_SHEET_ID_224, serviceAccountAuth);
   await doc.loadInfo(); // loads document properties and worksheets
   const sheet = doc.sheetsByIndex[TRAINING_SHEET_INDEX]; // or use `doc.sheetsById[id]` or `doc.sheetsByTitle[title]`
   // grab all cells now since we'll need to check (almost) all of them
   const cells = await sheet.loadCells("A1:AA");
-  
+
   // get current pilot name strings from the pilot header row
   const pilots = [];
   for (let i = DATA_COL_START; i < N_COLS; i++) {
     pilots.push(sheet.getCell(PILOT_ROW, i).value.trim());
   }
-  
-}
 
-(async function () {
-  await doc.loadInfo(); // loads document properties and worksheets
-  const sheet = doc.sheetsByIndex[0]; // or use `doc.sheetsById[id]` or `doc.sheetsByTitle[title]`
-  console.log(sheet.title);
-  const cells = await sheet.loadCells("A1:AA");
-  const cell = sheet.getCell(3, 5);
-
-  const pilots = [];
-  for (let i = DATA_COL_START; i < N_COLS; i++) {
-    pilots.push(sheet.getCell(PILOT_ROW, i).value.trim());
-  }
-
-  const qual_count_map = {};
-  
+  // TODO can probably use a little more abstraction instead of copypasta static code but it works and IQT, MCQ, CMQ, CQ and supplemental are well-defined categories
+  // row boundaries will be different for different CSG3 squadrons
   const IQT_qual_count_map = {};
   const MCQ_qual_count_map = {};
   const CQ_qual_count_map = {};
   const CMQ_qual_count_map = {};
   const supplemental_qual_count_map = {};
 
-  let cell_value;
+  // save all quals
   const quals = [];
-  // loop variables
+  // temp/loop variables
+  let cell_value;
   let qual;
   let pilot_str;
   let pilot_modex;
-
+  
+  // IQT
   const needs_IQT = [];
   for (let i = IQT_START; i < MCQ_START; i++) {
     if (NON_DATA_ROWS.includes(i)) continue;
@@ -99,7 +94,8 @@ export default async function generate(present_modices) {
       }
     }
   }
-
+  
+  // MCQ
   const needs_MCQ = [];
   for (let i = MCQ_START; i < CQ_START; i++) {
     if (NON_DATA_ROWS.includes(i)) continue;
@@ -122,30 +118,11 @@ export default async function generate(present_modices) {
       }
     }
   }
+  
+}
 
-  const needs_CMQ = [];
-  for (let i = CMQ_START; i < SUPPLEMENTAL_START; i++) {
-    if (NON_DATA_ROWS.includes(i)) continue;
-    qual = sheet.getCell(i, QUAL_COL).value;
-
-    quals.push(qual);
-    CMQ_qual_count_map[qual] = { count: 0, pilots: [] };
-
-    for (let j = DATA_COL_START; j < N_COLS; j++) {
-      pilot_str = sheet.getCell(PILOT_ROW, j).value;
-      pilot_modex = Number(pilot_str.match(modex_regex));
-      if (!present_modices.includes(pilot_modex)) continue;
-      if (needs_IQT.includes(pilot_modex)) continue;
-      if (needs_MCQ.includes(pilot_modex)) continue;
-
-      cell_value = sheet.getCell(i, j).value;
-      if (cell_value == "NOGO") {
-        if (!needs_CMQ.includes(pilot_modex)) needs_MCQ.push(pilot_modex);
-        CMQ_qual_count_map[qual].count += 1;
-        CMQ_qual_count_map[qual].pilots.push(pilot_str);
-      }
-    }
-  }
+(async function () {
+  
 
   for (let i = SUPPLEMENTAL_START; i < N_ROWS; i++) {
     if (NON_DATA_ROWS.includes(i)) continue;
@@ -170,7 +147,7 @@ export default async function generate(present_modices) {
   const qual_report_comparator = (a, b) => {
     if (a.count > b.count) {
       return -1;
-    } else if (a.cont < b.count) {
+    } else if (a.count < b.count) {
       return 1;
     }
     return 0;
