@@ -4,12 +4,12 @@ import * as BengalReport from '../data/qual-report-224.js';
 import { modex_regex } from '../data/util.js';;
 
 const SquadronChannelMap = {
-  103: '0',
-  14: '0',
-  86: '0',
-  224: '0',
-  513: '0',
-  126: '0'
+  103: '676242923859214352',
+  14: '676244125363994625',
+  86: '676243960712265769',
+  224: '676242520484741150',
+  513: '938036587361615913',
+  126: '1102420287405961267'
 }
 
 export const data = new SlashCommandBuilder()
