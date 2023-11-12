@@ -1,18 +1,7 @@
 import { SlashCommandBuilder } from 'discord.js';
 
 import * as BengalReport from '../data/qual-report-224.js';
-
 import { modex_regex } from '../data/util.js';;
-
-// regex to extract modices from pilot name strings -- just grabs digits at the end of the string, between 2 and 3
-// const modex_regex = /\d{2,3}$/gm;
-
-// (async function() {
-//   const modex_regex = /\d{2,3}$/gm;
-//   const present_modices = ['Apollo 403', 'Cyborg 402', 'Atorius 406', 'Rogue 456', '460', 'MIDN Jojo Clarke'].map(p => Number(p.match(modex_regex)));
-//   const report = await BengalReport.generate(present_modices);
-//   console.log(report);
-// })();
 
 const SquadronChannelMap = {
   103: '0',
