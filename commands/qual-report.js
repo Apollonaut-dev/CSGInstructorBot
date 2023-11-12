@@ -11,9 +11,9 @@ export const execute = async (interaction) => {
   // const members = chan.members
   // console.log(members.map(m => m.nickname ? m.nickname : m.user.username));
   
-  const guild = await interaction.guild.fetch()
+  // const guild = await interaction.guild.fetch()
   // const channels = await guild.channels.fetch()
-  const channel = await guild.channels.fetch('1172378718853935138');
+  const channel = await interaction.guild.channels.fetch('1172378718853935138');
   const members = await channel.members;
   console.log(members);
   
