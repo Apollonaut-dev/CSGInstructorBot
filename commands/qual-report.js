@@ -8,7 +8,10 @@ export const execute = async (interaction) => {
   
   const channel = interaction.guild.channels.cache.find(c => c.id == 1172378718853935138)
   
-  console.log(channel);
+  const chan = await channel.fetch()
+  const members = chan.members
+  
+  console.log(members.map(m => m.nickname ? m.nickname : m.user.username));
   
   await interaction.reply(
     `This command was run by ${interaction.user.username}, who joined on ${interaction.member.joinedAt}\nThis server is ${interaction.guild.name} and has ${interaction.guild.memberCount} members.`
