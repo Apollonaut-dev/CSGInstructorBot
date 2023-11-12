@@ -42,7 +42,7 @@ const qual_report_comparator = (a, b) => {
 
 // @param string[] present_modices -- array of strings containing 2-3 digit modices of each pilot present in the 224 Ready Room at the time of execution
 // @returns string -- containing the generated report TODO consider returning an object so it can be formatted with discord message components
-export default async function generate(present_modices) {
+export async function generate(present_modices) {
   const doc = new GoogleSpreadsheet(GOOGLE_SHEET_ID_224, serviceAccountAuth);
   await doc.loadInfo(); // loads document properties and worksheets
   const sheet = doc.sheetsByIndex[TRAINING_SHEET_INDEX]; // or use `doc.sheetsById[id]` or `doc.sheetsByTitle[title]`
@@ -119,11 +119,32 @@ export default async function generate(present_modices) {
     }
   }
   
-}
+  // CMQ
+  const needs_CMQ = [];
+  for (let i = CMQ_START; i < SUPPLEMENTAL_START; i++) {
+    if (NON_DATA_ROWS.includes(i)) continue;
+    qual = sheet.getCell(i, QUAL_COL).value;
 
-(async function () {
+    quals.push(qual);
+    CMQ_qual_count_map[qual] = { count: 0, pilots: [] };
+
+    for (let j = DATA_COL_START; j < N_COLS; j++) {
+      pilot_str = sheet.getCell(PILOT_ROW, j).value;
+      pilot_modex = Number(pilot_str.match(modex_regex));
+      if (!present_modices.includes(pilot_modex)) continue;
+      if (needs_IQT.includes(pilot_modex)) continue;
+      if (needs_MCQ.includes(pilot_modex)) continue;
+
+      cell_value = sheet.getCell(i, j).value;
+      if (cell_value == "NOGO") {
+        if (!needs_CMQ.includes(pilot_modex)) needs_MCQ.push(pilot_modex);
+        CMQ_qual_count_map[qual].count += 1;
+        CMQ_qual_count_map[qual].pilots.push(pilot_str);
+      }
+    }
+  }
   
-
+  // Supplemental
   for (let i = SUPPLEMENTAL_START; i < N_ROWS; i++) {
     if (NON_DATA_ROWS.includes(i)) continue;
     qual = sheet.getCell(i, QUAL_COL).value;
@@ -143,15 +164,15 @@ export default async function generate(present_modices) {
       }
     }
   }
-
-  const qual_report_comparator = (a, b) => {
-    if (a.count > b.count) {
-      return -1;
-    } else if (a.count < b.count) {
-      return 1;
-    }
-    return 0;
-  };
+  
+  // sort and build report strings
+  /*
+    TODO:
+    I used a map to hold the qual data in case I need to extend the featureset, 
+    but this requires a second loop through the quals 
+    (in addition to the nlog2(n) sorting)
+  */
+  
   // temp placeholder array
   let array;
   let report_string = "<<<<<<< BENGALS TRAINING REPORT >>>>>>>\n\n";
@@ -235,6 +256,5 @@ export default async function generate(present_modices) {
       entry.count
     } -- Eligible: \t${entry.pilots.join(", ")}\n`;
   }
-
-  // console.log(report_string);
-})();
+  return report_string; 
+}
