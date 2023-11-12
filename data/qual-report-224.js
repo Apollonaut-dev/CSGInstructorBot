@@ -40,7 +40,7 @@ const qual_report_comparator = (a, b) => {
 // @returns string -- containing the generated report TODO consider returning an object so it can be formatted with discord message components
 export async function generate(present_modices) {
   const doc = new GoogleSpreadsheet(GOOGLE_SHEET_ID_224, serviceAccountAuth);
-  
+
   await doc.loadInfo(); // loads document properties and worksheets
   const sheet = doc.sheetsByIndex[TRAINING_SHEET_INDEX]; // or use `doc.sheetsById[id]` or `doc.sheetsByTitle[title]`
   // grab all cells now since we'll need to check (almost) all of them
@@ -67,7 +67,7 @@ export async function generate(present_modices) {
   let qual;
   let pilot_str;
   let pilot_modex;
-  
+
   // IQT
   const needs_IQT = [];
   for (let i = IQT_START; i < MCQ_START; i++) {
@@ -91,8 +91,9 @@ export async function generate(present_modices) {
       }
     }
   }
-  
+
   // MCQ
+  const MCQ_qual_reports = [];
   const needs_MCQ = [];
   for (let i = MCQ_START; i < CQ_START; i++) {
     if (NON_DATA_ROWS.includes(i)) continue;
@@ -114,9 +115,15 @@ export async function generate(present_modices) {
         MCQ_qual_count_map[qual].pilots.push(pilot_str);
       }
     }
+    MCQ_qual_reports.push({
+      qual: qual,
+      count: MCQ_qual_count_map[qual].count,
+      pilots: MCQ_qual_count_map[qual].pilots,
+    });
   }
-  
+
   // CMQ
+  const CMQ_qual_reports = [];
   const needs_CMQ = [];
   for (let i = CMQ_START; i < SUPPLEMENTAL_START; i++) {
     if (NON_DATA_ROWS.includes(i)) continue;
@@ -139,9 +146,15 @@ export async function generate(present_modices) {
         CMQ_qual_count_map[qual].pilots.push(pilot_str);
       }
     }
+    CMQ_qual_reports.push({
+      qual: qual,
+      count: CMQ_qual_count_map[qual].count,
+      pilots: CMQ_qual_count_map[qual].pilots
+    })
   }
-  
+
   // Supplemental
+  const supplemental_qual_reports = [];
   for (let i = SUPPLEMENTAL_START; i < N_ROWS; i++) {
     if (NON_DATA_ROWS.includes(i)) continue;
     qual = sheet.getCell(i, QUAL_COL).value;
@@ -161,15 +174,17 @@ export async function generate(present_modices) {
       }
     }
   }
-  
+
   // sort and build report strings
   /*
     TODO:
     I used a map to hold the qual data in case I need to extend the featureset, 
     but this requires a second loop through the quals 
     (in addition to the nlog2(n) sorting)
+    
+    TODO: eliminate the slow for..of loops in this section
   */
-  
+
   // temp placeholder array
   let array;
   let report_string = "<<<<<<< BENGALS TRAINING REPORT >>>>>>>\n\n";
@@ -193,17 +208,7 @@ export async function generate(present_modices) {
     MCQ_checkride_night.count
   }\n\t${MCQ_checkride_night.pilots.join(", ")}\n`;
 
-  array = [];
-  for (const [qual, datum] of Object.entries(MCQ_qual_count_map)) {
-    if (qual === null) continue;
-    if (datum.count == 0) continue;
-    array.push({
-      qual: qual,
-      count: datum.count,
-      pilots: datum.pilots,
-    });
-  }
-  let sorted = array.sort(qual_report_comparator);
+  let sorted = MCQ_qual_reports.sort(qual_report_comparator);
   let entry;
   for (let i = 0; i < Math.min(sorted.length, 5); i++) {
     entry = sorted[i];
@@ -211,21 +216,11 @@ export async function generate(present_modices) {
       entry.count
     } -- Eligible: \t${entry.pilots.join(", ")}\n`;
   }
-
+  
   // CMQ
   report_string += "\n======= CMQ Report =======\n";
 
-  array = [];
-  for (const [qual, datum] of Object.entries(CMQ_qual_count_map)) {
-    if (qual === null) continue;
-    if (datum.count == 0) continue;
-    array.push({
-      qual: qual,
-      count: datum.count,
-      pilots: datum.pilots,
-    });
-  }
-  sorted = array.sort(qual_report_comparator);
+  sorted = CMQ_qual_reports.sort(qual_report_comparator);
   for (let i = 0; i < Math.min(sorted.length, 5); i++) {
     entry = sorted[i];
     report_string += `\t${entry.qual}\n\t${
@@ -253,5 +248,5 @@ export async function generate(present_modices) {
       entry.count
     } -- Eligible: \t${entry.pilots.join(", ")}\n`;
   }
-  return report_string; 
+  return report_string;
 }
