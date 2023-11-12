@@ -15,7 +15,7 @@ export const execute = async (interaction) => {
   // const channels = await guild.channels.fetch()
   const channel = await interaction.guild.channels.fetch('1172378718853935138');
   const members = await channel.members;
-  console.log(members);
+  console.log(members.map((m) => m.nickname ? m.nickname : m.user.username));
   
   await interaction.reply(
     `This command was run by ${interaction.user.username}, who joined on ${interaction.member.joinedAt}\nThis server is ${interaction.guild.name} and has ${interaction.guild.memberCount} members.`
