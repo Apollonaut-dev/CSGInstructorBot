@@ -11,6 +11,8 @@ const SquadronChannelMap = {
   126: '0'
 }
 
+console.log(BengalReport.generate(['Apollo 403']));
+
 export const data = new SlashCommandBuilder()
   .setName("qual-report")
   .setDescription("Get qual report for present members");
@@ -29,7 +31,10 @@ export const execute = async (interaction) => {
   const members = await channel.members;
   console.log(members.map((m) => m.nickname ? m.nickname : m.user.username));
   
-  await interaction.reply(BengalReport.generate(['Apollo 403']))
+  // defer reply because report generation, con
+  await interaction.deferReply();
+  const report = await BengalReport.generate(['Apollo 403']);
+  await interaction.editReply(report);
   
   // await interaction.reply(
   //   `This command was run by ${interaction.user.username}, who joined on ${interaction.member.joinedAt}\nThis server is ${interaction.guild.name} and has ${interaction.guild.memberCount} members.`
