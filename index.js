@@ -4,8 +4,11 @@ import { Client, Collection, Events, GatewayIntentBits } from "discord.js";
 
 import fs from "node:fs";
 import path from "node:path";
+
 import { fileURLToPath } from "url";
 
+// get list of filenames of modules which implement slash commands
+// should create subfolders if this gets too big
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const commandsPath = path.join(__dirname, "commands");
@@ -13,6 +16,7 @@ const commandFiles = fs
   .readdirSync(commandsPath)
   .filter((file) => file.endsWith(".js"));
 
+// init bot client
 (async function () {
   console.log("Hello world");
 
