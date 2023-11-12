@@ -2,6 +2,11 @@ import { SlashCommandBuilder } from 'discord.js';
 
 import * as BengalReport from '../data/qual-report-224.js';
 
+(async function() {
+  const report = await BengalReport.generate(['Apollo 403', 'Cyborg 402', 'Atorius 406', 'Rogue 456', '460']);
+  console.log(report);
+})();
+
 const SquadronChannelMap = {
   103: '0',
   14: '0',
@@ -10,8 +15,6 @@ const SquadronChannelMap = {
   513: '0',
   126: '0'
 }
-
-console.log(BengalReport.generate(['Apollo 403']));
 
 export const data = new SlashCommandBuilder()
   .setName("qual-report")
@@ -31,12 +34,9 @@ export const execute = async (interaction) => {
   const members = await channel.members;
   console.log(members.map((m) => m.nickname ? m.nickname : m.user.username));
   
-  // defer reply because report generation, con
+  const pilots = 
+  // defer reply because report generation, connecting with google API often takes longer than 3 seconds
   await interaction.deferReply();
-  const report = await BengalReport.generate(['Apollo 403']);
+  const report = await BengalReport.generate(['Apollo 403', 'Cyborg 402', 'Atorius 406', 'Rogue 456', '460']);
   await interaction.editReply(report);
-  
-  // await interaction.reply(
-  //   `This command was run by ${interaction.user.username}, who joined on ${interaction.member.joinedAt}\nThis server is ${interaction.guild.name} and has ${interaction.guild.memberCount} members.`
-  // );
 };

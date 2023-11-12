@@ -103,7 +103,6 @@ const present_modices = present_pilots.map((pilot) =>
   }
 
   const qual_count_map = {};
-  let active_count_map;
   const IQT_qual_count_map = {};
   const MCQ_qual_count_map = {};
   const CQ_qual_count_map = {};
@@ -299,7 +298,7 @@ const present_modices = present_pilots.map((pilot) =>
     } -- Eligible: \t${entry.pilots.join(", ")}\n`;
   }
 
-  // console.log(report_string);
+  console.log(report_string);
 })();
 
 /**

@@ -44,6 +44,7 @@ const qual_report_comparator = (a, b) => {
 // @returns string -- containing the generated report TODO consider returning an object so it can be formatted with discord message components
 export async function generate(present_modices) {
   const doc = new GoogleSpreadsheet(GOOGLE_SHEET_ID_224, serviceAccountAuth);
+  
   await doc.loadInfo(); // loads document properties and worksheets
   const sheet = doc.sheetsByIndex[TRAINING_SHEET_INDEX]; // or use `doc.sheetsById[id]` or `doc.sheetsByTitle[title]`
   // grab all cells now since we'll need to check (almost) all of them
