@@ -1,10 +1,10 @@
 import { GoogleSpreadsheet } from "google-spreadsheet";
 import serviceAccountAuth from "../services/google.js";
 
+import { modex_regex, qual_report_comparator } from './util.js';
+
 const GOOGLE_SHEET_ID_224 = "1G58gg-BKW-fpYPudBMDZztFism5FJ_OME9kvzvjxm2w";
 const TRAINING_SHEET_INDEX = 0;
-
-const modex_regex = /\d{2,3}$/gm;
 
 const N_ROWS = 138;
 const N_COLS = 27;
@@ -23,18 +23,8 @@ const SUPPLEMENTAL_START = 90;
 
 // TODO find a better way of ignoring formatting rows
 const NON_DATA_ROWS = [
-  13, 17, 20, 26, 35, 44, 45, 50, 59, 65, 70, 75, 82, 90, 122,
+  13, 17, 20, 26, 35, 44, 45, 49, 59, 65, 70, 75, 82, 90, 122,
 ];
-
-// comparator for sorting stratified qual lists by number of people unqual'd
-const qual_report_comparator = (a, b) => {
-  if (a.count > b.count) {
-    return -1;
-  } else if (a.count < b.count) {
-    return 1;
-  }
-  return 0;
-};
 
 // @param string[] present_modices -- array of strings containing 2-3 digit modices of each pilot present in the 224 Ready Room at the time of execution
 // @returns string -- containing the generated report TODO consider returning an object so it can be formatted with discord message components
@@ -173,6 +163,11 @@ export async function generate(present_modices) {
         supplemental_qual_count_map[qual].pilots.push(pilot_str);
       }
     }
+    supplemental_qual_reports.push({
+      qual: qual,
+      count: supplemental_qual_count_map[qual].count,
+      pilots: supplemental_qual_count_map[qual].pilots
+    })
   }
 
   // sort and build report strings
@@ -219,7 +214,6 @@ export async function generate(present_modices) {
   
   // CMQ
   report_string += "\n======= CMQ Report =======\n";
-
   sorted = CMQ_qual_reports.sort(qual_report_comparator);
   for (let i = 0; i < Math.min(sorted.length, 5); i++) {
     entry = sorted[i];
@@ -230,18 +224,7 @@ export async function generate(present_modices) {
 
   // Supplemental
   report_string += "\n======= Supplementals =======\n";
-
-  array = [];
-  for (const [qual, datum] of Object.entries(supplemental_qual_count_map)) {
-    if (qual === null) continue;
-    if (datum.count == 0) continue;
-    array.push({
-      qual: qual,
-      count: datum.count,
-      pilots: datum.pilots,
-    });
-  }
-  sorted = array.sort(qual_report_comparator);
+  sorted = supplemental_qual_reports.sort(qual_report_comparator);
   for (let i = 0; i < Math.min(sorted.length, 5); i++) {
     entry = sorted[i];
     report_string += `\t${entry.qual}\n\t${
