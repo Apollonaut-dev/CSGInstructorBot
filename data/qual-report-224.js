@@ -182,7 +182,7 @@ export async function generate(present_modices) {
 
   // temp placeholder array
   let array;
-  let report_string = "<<<<<<< BENGALS TRAINING REPORT >>>>>>>\n\n";
+  let report_string = "<<<<<<< TRAINING REPORT >>>>>>>\n";
   // IQT handling
   // tbh I think it is sufficient to report IQT checkrides only
   report_string += "======= IQT Report =======\n";

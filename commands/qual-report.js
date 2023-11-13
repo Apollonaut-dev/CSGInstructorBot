@@ -35,13 +35,10 @@ export const data = new SlashCommandBuilder()
 export const execute = async (interaction) => {
   console.log('executing qual-report')
   
-  
-  // const command_channel = interaction.channel.id
-  
   const squadron_arg = interaction.options.getString('squadron');
   
-  console.log('squadron_arg: ' + squadron_arg);
-  
+  // if command argument was included, attempt to get squadron data based on argument
+  // if not, infer squadron from the IP channel it was sent from
   let selected_squadron;
   if (squadron_arg && squadron_arg.length && squadron_arg in SquadronReadyRoomVCChannelMap) {
     selected_squadron = squadron_arg
@@ -64,7 +61,9 @@ export const execute = async (interaction) => {
   
   // get members currently connected to voice channel ready room
   const members = ready_room_vc.members;
-  if (members.length == 0) {
+  console.log(members);
+  console.log('members.size: ' + members.size);
+  if (members.size == 0) {
     return interaction.reply(`${selected_squadron} ready room is empty.`);
   }
   
