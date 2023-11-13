@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from 'discord.js';
 
 // import * as JollyRogersReport from '../data/qual-report-103.js';
-// import * as TophattersReport from '../data/qual-report-14.js';
+import * as TophattersReport from '../data/qual-report-14.js';
 // import * as SidewindersReport from '../data/qual-report-86.js';
 import * as BengalsReport from '../data/qual-report-224.js';
 // import * as NightmaresReport form '../data/qual-report-513.js';
@@ -78,9 +78,9 @@ export const execute = async (interaction) => {
     // case '103':
     //   JollyRogers.generate(present_modices);
     //   break;
-    // case '14':
-    //   Tophatters.generate(present_modices);
-    //   break;
+    case '14':
+      Tophatters.generate(present_modices);
+      break;
     // case '86':
     //   SidewindersReport.generate(present_modices);
     //   break;

@@ -73,7 +73,7 @@ export async function generate(present_modices) {
       if (!present_modices.includes(pilot_modex)) continue;
 
       cell_value = sheet.getCell(i, j).value;
-      if (cell_value == "NOGO") {
+      if (cell_value == "NOGO" || cell_value == 'FOCUS') {
         if (!needs_IQT.includes(pilot_modex)) needs_IQT.push(pilot_modex);
 
         IQT_qual_count_map[qual].count += 1;
@@ -99,7 +99,7 @@ export async function generate(present_modices) {
       if (needs_IQT.includes(pilot_modex)) continue;
 
       cell_value = sheet.getCell(i, j).value;
-      if (cell_value == "NOGO") {
+      if (cell_value == "NOGO" || cell_value == 'FOCUS') {
         if (!needs_MCQ.includes(pilot_modex)) needs_MCQ.push(pilot_modex);
         MCQ_qual_count_map[qual].count += 1;
         MCQ_qual_count_map[qual].pilots.push(pilot_str);
@@ -130,7 +130,7 @@ export async function generate(present_modices) {
       if (needs_MCQ.includes(pilot_modex)) continue;
 
       cell_value = sheet.getCell(i, j).value;
-      if (cell_value == "NOGO") {
+      if (cell_value == "NOGO" || cell_value == 'FOCUS') {
         if (!needs_CMQ.includes(pilot_modex)) needs_MCQ.push(pilot_modex);
         CMQ_qual_count_map[qual].count += 1;
         CMQ_qual_count_map[qual].pilots.push(pilot_str);
@@ -158,7 +158,7 @@ export async function generate(present_modices) {
       if (!present_modices.includes(pilot_modex)) continue;
 
       cell_value = sheet.getCell(i, j).value;
-      if (cell_value == "NOGO") {
+      if (cell_value == "NOGO" || cell_value == 'FOCUS') {
         supplemental_qual_count_map[qual].count += 1;
         supplemental_qual_count_map[qual].pilots.push(pilot_str);
       }

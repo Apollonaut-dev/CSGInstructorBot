@@ -6,24 +6,24 @@ import { modex_regex, qual_report_comparator } from './util.js';
 const GOOGLE_SHEET_ID_224 = "1TJeKiydkGcYFiCVivzvw5DO-1bTen_GMorU0U8e61OE";
 const TRAINING_SHEET_INDEX = 0;
 
-const N_ROWS = 138;
-const N_COLS = 27;
+const N_ROWS = 89;
+const N_COLS = 81;
 
-const DATA_ROW_START = 4;
-const DATA_COL_START = 2;
+const DATA_ROW_START = 6;
+const DATA_COL_START = 7;
 
-const PILOT_ROW = 2;
+const PILOT_ROW = 3;
 const QUAL_COL = 1;
 
-const IQT_START = 4;
+const IQT_START = 6;
 const MCQ_START = 17;
 const CQ_START = 35;
-const CMQ_START = 44;
-const SUPPLEMENTAL_START = 90;
+const CMQ_START = 42;
+const SUPPLEMENTAL_START = 79;
 
 // TODO find a better way of ignoring formatting rows
 const NON_DATA_ROWS = [
-  13, 17, 20, 26, 35, 44, 45, 49, 59, 65, 70, 75, 82, 90, 122,
+  16, 17, 22, 28, 34, 35, 40, 41, 42, 46, 53, 54, 58, 62, 68, 72, 78, 79, 81, 86
 ];
 
 // @param string[] present_modices -- array of strings containing 2-3 digit modices of each pilot present in the 224 Ready Room at the time of execution
@@ -73,7 +73,7 @@ export async function generate(present_modices) {
       if (!present_modices.includes(pilot_modex)) continue;
 
       cell_value = sheet.getCell(i, j).value;
-      if (cell_value == "NOGO") {
+      if (cell_value == "NOGO" || cell_value == '---' || cell_value == 'FOCUS') {
         if (!needs_IQT.includes(pilot_modex)) needs_IQT.push(pilot_modex);
 
         IQT_qual_count_map[qual].count += 1;
@@ -99,7 +99,7 @@ export async function generate(present_modices) {
       if (needs_IQT.includes(pilot_modex)) continue;
 
       cell_value = sheet.getCell(i, j).value;
-      if (cell_value == "NOGO") {
+      if (cell_value == "NOGO" || cell_value == '---' || cell_value == 'FOCUS') {
         if (!needs_MCQ.includes(pilot_modex)) needs_MCQ.push(pilot_modex);
         MCQ_qual_count_map[qual].count += 1;
         MCQ_qual_count_map[qual].pilots.push(pilot_str);
@@ -130,7 +130,7 @@ export async function generate(present_modices) {
       if (needs_MCQ.includes(pilot_modex)) continue;
 
       cell_value = sheet.getCell(i, j).value;
-      if (cell_value == "NOGO") {
+      if (cell_value == "NOGO" || cell_value == '---' || cell_value == 'FOCUS') {
         if (!needs_CMQ.includes(pilot_modex)) needs_MCQ.push(pilot_modex);
         CMQ_qual_count_map[qual].count += 1;
         CMQ_qual_count_map[qual].pilots.push(pilot_str);
@@ -158,7 +158,7 @@ export async function generate(present_modices) {
       if (!present_modices.includes(pilot_modex)) continue;
 
       cell_value = sheet.getCell(i, j).value;
-      if (cell_value == "NOGO") {
+      if (cell_value == "NOGO" || cell_value == '---' || cell_value == 'FOCUS') {
         supplemental_qual_count_map[qual].count += 1;
         supplemental_qual_count_map[qual].pilots.push(pilot_str);
       }
