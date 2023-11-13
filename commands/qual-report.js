@@ -19,7 +19,7 @@ export const data = new SlashCommandBuilder()
 export const execute = async (interaction) => {
   console.log('executing qual-report')
   
-  const channel = await interaction.guild.channels.fetch('743379174588153958');
+  const channel = await interaction.guild.channels.fetch('676242520484741150');
   const members = await channel.members;
   const nicknames = members.map(m => m.nickname ? m.nickname : m.user.username)
   // const nicknames = ['Apollo 403', 'Cyborg 402', 'Atorius 406', 'Rogue 456', '460', 'MIDN Jojo Clarke'];
