@@ -19,15 +19,19 @@ export const data = new SlashCommandBuilder()
 export const execute = async (interaction) => {
   console.log('executing qual-report')
   
-  const channel = await interaction.guild.channels.fetch('676242520484741150');
-  const members = await channel.members;
-  const nicknames = members.map(m => m.nickname ? m.nickname : m.user.username)
-  // const nicknames = ['Apollo 403', 'Cyborg 402', 'Atorius 406', 'Rogue 456', '460', 'MIDN Jojo Clarke'];
+  const command_channel = interaction.channel.id
+  
+  const ready_room_vc = await interaction.guild.channels.fetch('676242520484741150');
+  const members = await ready_room_vc.members;
+  const nicknames = members.map(m => m.nickname ? m.nickname : m.user.username);
   const present_modices = nicknames.map(p => Number(p.match(modex_regex)));
   console.log(members.map((m) => m.nickname ? m.nickname : m.user.username));
   
   // defer reply because report generation, connecting with google API often takes longer than 3 seconds
   await interaction.deferReply();
   const report = await BengalReport.generate(present_modices);
+  
+  
+  
   await interaction.editReply(report);
 };
