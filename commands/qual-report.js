@@ -17,8 +17,7 @@ export const data = new SlashCommandBuilder()
   .setDescription("Get qual report for present members")
   .addStringOption(option => {
     return option.setName('squadron')
-      .setDescription('Squadron the bot will report for')
-      .setRequired(true);
+      .setDescription('Squadron the bot will report for');
   });
 
 export const execute = async (interaction) => {
@@ -30,7 +29,7 @@ export const execute = async (interaction) => {
   const members = await ready_room_vc.members;
   
   if (members.length == 0) {
-    interaction.reply(`224 ready room is empty`)
+    interaction.reply(`224 ready room is empty.`)
   }
   
   const nicknames = members.map(m => m.nickname ? m.nickname : m.user.username);
