@@ -37,7 +37,7 @@ const commandFiles = fs
     );
     // const data = await rest.put(Routes.applicationGuildCommands(process.env.APP_ID, process.env.GUILD_ID), { body: commands })
     const data = await rest.put(
-      Routes.applicationGuildCommands(process.env.APP_ID, process.env.GUILD_ID),
+      Routes.applicationCommands(process.env.APP_ID),
       { body: commands }
     );
     console.log(
