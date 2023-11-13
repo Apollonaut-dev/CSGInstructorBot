@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from 'discord.js';
 
-import * as BengalReport from '../data/qual-report-224.js';
+import * as BengalsReport from '../data/qual-report-224.js';
 // import * as JollyRogersReport from '../data/qual-report-103.js';
 // import * as TophattersReport from '../data/qual-report-14.js';
 // import * as SidewindersReport from '../data/qual-report-86.js';
@@ -9,19 +9,19 @@ import * as BengalReport from '../data/qual-report-224.js';
 import { modex_regex } from '../data/util.js';;
 
 const SquadronReadyRoomVCChannelMap = {
-  103: '676242923859214352',
-  14: '676244125363994625',
-  86: '676243960712265769',
-  224: '676242520484741150',
-  513: '938036587361615913'
+  ['103']: '676242923859214352',
+  ['14']: '676244125363994625',
+  ['86']: '676243960712265769',
+  ['224']: '676242520484741150',
+  ['513']: '938036587361615913'
 }
 
 const IPTextChannelSquadronMap = {
-  ['741017122796339251']: 103,
-  ['907489943218163742']: 14,
-  ['616728259098443787']: 86,
-  ['743379174588153958']: 224,
-  ['951884830491152424']: 513
+  ['741017122796339251']: '103',
+  ['907489943218163742']: '14',
+  ['616728259098443787']: '86',
+  ['743379174588153958']: '224',
+  ['951884830491152424']: '513'
 }
 
 export const data = new SlashCommandBuilder()
@@ -40,8 +40,9 @@ export const execute = async (interaction) => {
   
   const squadron_arg = interaction.options.getString('squadron');
   
-  let selected_squadron;
+  console.log('squadron_arg: ' + squadron_arg);
   
+  let selected_squadron;
   if (squadron_arg && squadron_arg.length && squadron_arg in SquadronReadyRoomVCChannelMap) {
     selected_squadron = squadron_arg
   } else if (IPTextChannelSquadronMap[interaction.channel.channelId]) {
@@ -61,23 +62,42 @@ export const execute = async (interaction) => {
     return;
   }
   
+  // get members currently connected to voice channel ready room
   const members = ready_room_vc.members;
   if (members.length == 0) {
     return interaction.reply(`${selected_squadron} ready room is empty.`);
   }
   
+  // map members to nicknames to modices
   const nicknames = members.map(m => m.nickname ? m.nickname : m.user.username);
   const present_modices = nicknames.map(p => Number(p.match(modex_regex)));
   console.log(members.map((m) => m.nickname ? m.nickname : m.user.username));
   
-  // defer reply because report generation, connecting with google API often takes longer than 3 seconds
+  // defer reply because report generation, connecting with google API often takes longer than 3 seconds hence this is required per Discord API documentation
   await interaction.deferReply();
-  
   let report;
   switch (selected_squadron) {
-      
+    // case '103':
+    //   JollyRogers.generate(present_modices);
+    //   break;
+    // case '14':
+    //   Tophatters.generate(present_modices);
+    //   break;
+    // case '86':
+    //   SidewindersReport.generate(present_modices);
+    //   break;
+    case '224':
+      report = await BengalsReport.generate(present_modices);
+      break;
+    // case '513':
+    //   NightmaresReport.generate(present_modices);
+    //   break;
+    default:
+      console.log(`Error: No report handler for selected squadron ${selected_squadron}`);
+      interaction.editReply(`Error: No report handler for selected squadron ${selected_squadron}`);
+      return;
   }
-  const report = await BengalReport.generate(present_modices);
+  // const report = await BengalsReport.generate(present_modices);
   
   await interaction.editReply(report);
 };
