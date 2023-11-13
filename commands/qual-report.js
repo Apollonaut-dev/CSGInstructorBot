@@ -40,36 +40,44 @@ export const execute = async (interaction) => {
   
   const squadron_arg = interaction.options.getString('squadron');
   
-  // select VC based on argument
-  if (squadron_arg && squadron_arg.length) {
+  let selected_squadron;
   
-  } 
-  // select VC based on which IP channel the command was executed from
-  else {
-    switch(interaction.channel.channelId) {
-        
-    }
+  if (squadron_arg && squadron_arg.length && squadron_arg in SquadronReadyRoomVCChannelMap) {
+    selected_squadron = squadron_arg
+  } else if (IPTextChannelSquadronMap[interaction.channel.channelId]) {
+    selected_squadron = IPTextChannelSquadronMap[interaction.channel.channelId]
+  } else {
+    // error -- can't resolve squadron
+    return interaction.reply("Error: can't resolve squadron");
   }
   
-  const ready_room_vc = await interaction.guild.channels.fetch('676242520484741150');
+  const selected_ready_room = SquadronReadyRoomVCChannelMap[selected_squadron];
+  let ready_room_vc;
+  try {
+    ready_room_vc = await interaction.guild.channels.fetch(selected_ready_room);
+  } catch (error) {
+    console.log(error);
+    interaction.reply('Error resolving voice channel.');
+    return;
+  }
   
-  
-  const members = await ready_room_vc.members;
-  
+  const members = ready_room_vc.members;
   if (members.length == 0) {
-    return interaction.reply(`224 ready room is empty.`);
+    return interaction.reply(`${selected_squadron} ready room is empty.`);
   }
   
   const nicknames = members.map(m => m.nickname ? m.nickname : m.user.username);
-
   const present_modices = nicknames.map(p => Number(p.match(modex_regex)));
   console.log(members.map((m) => m.nickname ? m.nickname : m.user.username));
   
   // defer reply because report generation, connecting with google API often takes longer than 3 seconds
   await interaction.deferReply();
+  
+  let report;
+  switch (selected_squadron) {
+      
+  }
   const report = await BengalReport.generate(present_modices);
-  
-  
   
   await interaction.editReply(report);
 };
