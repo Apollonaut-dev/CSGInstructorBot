@@ -76,19 +76,19 @@ export const execute = async (interaction) => {
   let report;
   switch (selected_squadron) {
     // case '103':
-    //   JollyRogers.generate(present_modices);
+    //   report = await JollyRogers.generate(present_modices);
     //   break;
     case '14':
-      Tophatters.generate(present_modices);
+      report = await TophattersReport.generate(present_modices);
       break;
     // case '86':
-    //   SidewindersReport.generate(present_modices);
+    //   report = await SidewindersReport.generate(present_modices);
     //   break;
     case '224':
       report = await BengalsReport.generate(present_modices);
       break;
     // case '513':
-    //   NightmaresReport.generate(present_modices);
+    //   report = await NightmaresReport.generate(present_modices);
     //   break;
     default:
       console.log(`Error: No report handler for selected squadron ${selected_squadron}`);
