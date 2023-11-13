@@ -1,13 +1,14 @@
 import { SlashCommandBuilder } from 'discord.js';
 
-import * as BengalsReport from '../data/qual-report-224.js';
 // import * as JollyRogersReport from '../data/qual-report-103.js';
 // import * as TophattersReport from '../data/qual-report-14.js';
 // import * as SidewindersReport from '../data/qual-report-86.js';
+import * as BengalsReport from '../data/qual-report-224.js';
 // import * as NightmaresReport form '../data/qual-report-513.js';
 
 import { modex_regex } from '../data/util.js';;
 
+// Squadrons to VC ready rooms
 const SquadronReadyRoomVCChannelMap = {
   ['103']: '676242923859214352',
   ['14']: '676244125363994625',
@@ -16,6 +17,7 @@ const SquadronReadyRoomVCChannelMap = {
   ['513']: '938036587361615913'
 }
 
+// IP text channels to squadrons
 const IPTextChannelSquadronMap = {
   ['741017122796339251']: '103',
   ['907489943218163742']: '14',
@@ -25,7 +27,7 @@ const IPTextChannelSquadronMap = {
 }
 
 export const data = new SlashCommandBuilder()
-  .setName("qual-report")
+  .setName("quals")
   .setDescription("Get qual report for present members")
   .addStringOption(option => {
     return option.setName('squadron')
@@ -33,8 +35,6 @@ export const data = new SlashCommandBuilder()
   });
 
 export const execute = async (interaction) => {
-  console.log('executing qual-report')
-  
   const squadron_arg = interaction.options.getString('squadron');
   
   // if command argument was included, attempt to get squadron data based on argument
@@ -48,6 +48,7 @@ export const execute = async (interaction) => {
     // error -- can't resolve squadron
     return interaction.reply("Error: can't resolve squadron");
   }
+  console.log(`Attempting to generate report for ${selected_squadron}`);
   
   const selected_ready_room = SquadronReadyRoomVCChannelMap[selected_squadron];
   let ready_room_vc;
@@ -61,8 +62,6 @@ export const execute = async (interaction) => {
   
   // get members currently connected to voice channel ready room
   const members = ready_room_vc.members;
-  console.log(members);
-  console.log('members.size: ' + members.size);
   if (members.size == 0) {
     return interaction.reply(`${selected_squadron} ready room is empty.`);
   }
@@ -96,7 +95,6 @@ export const execute = async (interaction) => {
       interaction.editReply(`Error: No report handler for selected squadron ${selected_squadron}`);
       return;
   }
-  // const report = await BengalsReport.generate(present_modices);
   
   await interaction.editReply(report);
 };
