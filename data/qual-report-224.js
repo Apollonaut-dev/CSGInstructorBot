@@ -187,7 +187,7 @@ export async function generate(present_modices) {
   // tbh I think it is sufficient to report IQT checkrides only
   report_string += "======= IQT Report =======\n";
   const IQT_checkride = IQT_qual_count_map["IQT Check Ride"];
-  report_string += `IQT checkride: ${
+  report_string += `Eligible for IQT checkride: ${
     IQT_checkride.count
   }\n\t${IQT_checkride.pilots.join(", ")}\n`;
   // IQT breakdown ommitted but it would be similar to the following two for...loops
@@ -196,10 +196,10 @@ export async function generate(present_modices) {
   const MCQ_checkride_day = MCQ_qual_count_map["MCQ Check Ride (Day IFR)"];
   const MCQ_checkride_night = MCQ_qual_count_map["MCQ Check Ride (Night)"];
   report_string += "\n======= MCQ Report =======\n";
-  report_string += `MCQ Checkride (Day IFR): ${
+  report_string += `Eligible for MCQ Checkride (Day IFR): ${
     MCQ_checkride_day.count
   }\n\t${MCQ_checkride_day.pilots.join(", ")}\n`;
-  report_string += `MCQ Checkride (Night): ${
+  report_string += `Eligible for MCQ Checkride (Night): ${
     MCQ_checkride_night.count
   }\n\t${MCQ_checkride_night.pilots.join(", ")}\n`;
 
@@ -207,6 +207,7 @@ export async function generate(present_modices) {
   let entry;
   for (let i = 0; i < Math.min(sorted.length, 5); i++) {
     entry = sorted[i];
+    if (entry.count == 0) continue;
     report_string += `\t${entry.qual}\n\t${
       entry.count
     } -- Eligible: \t${entry.pilots.join(", ")}\n`;
@@ -217,6 +218,7 @@ export async function generate(present_modices) {
   sorted = CMQ_qual_reports.sort(qual_report_comparator);
   for (let i = 0; i < Math.min(sorted.length, 5); i++) {
     entry = sorted[i];
+    if (entry.count == 0) continue;
     report_string += `\t${entry.qual}\n\t${
       entry.count
     } -- Eligible: \t${entry.pilots.join(", ")}\n`;
@@ -227,6 +229,7 @@ export async function generate(present_modices) {
   sorted = supplemental_qual_reports.sort(qual_report_comparator);
   for (let i = 0; i < Math.min(sorted.length, 5); i++) {
     entry = sorted[i];
+    if (entry.count == 0) continue;
     report_string += `\t${entry.qual}\n\t${
       entry.count
     } -- Eligible: \t${entry.pilots.join(", ")}\n`;
