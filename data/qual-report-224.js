@@ -96,7 +96,6 @@ export async function generate(present_modices) {
       pilot_str = sheet.getCell(PILOT_ROW, j).value;
       pilot_modex = Number(pilot_str.match(modex_regex));
       if (!present_modices.includes(pilot_modex)) continue;
-      console.log(`computing quals for ${pilot_modex}`)
       if (needs_IQT.includes(pilot_modex)) continue;
 
       cell_value = sheet.getCell(i, j).value;
