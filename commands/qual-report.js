@@ -86,7 +86,7 @@ export const execute = async (interaction) => {
     //   break;
     case '224':
       // report = await BengalsReport.generate(present_modices);
-      report = await BengalsReport.generate(['453']);
+      report = await BengalsReport.generate(['Warhawk 453']);
       break;
     // case '513':
     //   report = await NightmaresReport.generate(present_modices);

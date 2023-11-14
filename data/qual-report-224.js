@@ -39,7 +39,7 @@ export async function generate(present_modices) {
   // get current pilot name strings from the pilot header row
   const pilots = [];
   for (let i = DATA_COL_START; i < N_COLS; i++) {
-    pilots.push(sheet.getCell(PILOT_ROW, i).value.trim());
+    pilots.push(sheet.getCell(PILOT_ROW, i).value);
   }
 
   // TODO can probably use a little more abstraction instead of copypasta static code but it works and IQT, MCQ, CMQ, CQ and supplemental are well-defined categories
@@ -96,6 +96,7 @@ export async function generate(present_modices) {
       pilot_str = sheet.getCell(PILOT_ROW, j).value;
       pilot_modex = Number(pilot_str.match(modex_regex));
       if (!present_modices.includes(pilot_modex)) continue;
+      console.log(`computing quals for ${pilot_modex}`)
       if (needs_IQT.includes(pilot_modex)) continue;
 
       cell_value = sheet.getCell(i, j).value;
