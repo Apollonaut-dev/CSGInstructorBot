@@ -62,9 +62,9 @@ export const execute = async (interaction) => {
   
   // get members currently connected to voice channel ready room
   const members = ready_room_vc.members;
-  if (members.size == 0) {
-    return interaction.reply(`${selected_squadron} ready room is empty.`);
-  }
+  // if (members.size == 0) {
+  //   return interaction.reply(`${selected_squadron} ready room is empty.`);
+  // }
   
   // map members to nicknames to modices
   const nicknames = members.map(m => m.nickname ? m.nickname : m.user.username);
@@ -85,7 +85,8 @@ export const execute = async (interaction) => {
     //   report = await SidewindersReport.generate(present_modices);
     //   break;
     case '224':
-      report = await BengalsReport.generate(present_modices);
+      // report = await BengalsReport.generate(present_modices);
+      report = await BengalsReport.generate(['453']);
       break;
     // case '513':
     //   report = await NightmaresReport.generate(present_modices);
