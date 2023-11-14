@@ -40,12 +40,10 @@ export const execute = async (interaction) => {
   // if command argument was included, attempt to get squadron data based on argument
   // if not, infer squadron from the IP channel it was sent from
   let selected_squadron;
-  console.log("interaction.channel.channelId: " + interaction.channel.channelId)
-  console.log("IPTextChannelSquadronMap[interaction.channel.channelId]: " + IPTextChannelSquadronMap[interaction.channel.channelId])
   if (squadron_arg && squadron_arg.length && squadron_arg in SquadronReadyRoomVCChannelMap) {
     selected_squadron = squadron_arg
-  } else if (IPTextChannelSquadronMap[String(interaction.channel.channelId)]) {
-    selected_squadron = IPTextChannelSquadronMap[interaction.channel.channelId]
+  } else if (IPTextChannelSquadronMap[String(interaction.channelId)]) {
+    selected_squadron = IPTextChannelSquadronMap[interaction.channelId]
   } else {
     // error -- can't resolve squadron
     return interaction.reply("Error: can't resolve squadron");
@@ -87,9 +85,9 @@ export const execute = async (interaction) => {
     //   report = await SidewindersReport.generate(present_modices);
     //   break;
     case '224':
-      // report = await BengalsReport.generate(present_modices);
-      console.log('generating warhawk meme report')
-      report = await BengalsReport.generate([453]);
+      report = await BengalsReport.generate(present_modices);
+      // console.log('generating warhawk meme report')
+      // report = await BengalsReport.generate([453]);
       break;
     // case '513':
     //   report = await NightmaresReport.generate(present_modices);
