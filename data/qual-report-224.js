@@ -96,7 +96,7 @@ export async function generate(present_modices) {
       pilot_str = sheet.getCell(PILOT_ROW, j).value;
       pilot_modex = Number(pilot_str.match(modex_regex));
       if (!present_modices.includes(pilot_modex)) continue;
-      if (needs_IQT.includes(pilot_modex)) continue;
+      // if (needs_IQT.includes(pilot_modex)) continue;
 
       cell_value = sheet.getCell(i, j).value;
       if (cell_value == "NOGO" || cell_value == 'FOCUS') {
@@ -126,8 +126,8 @@ export async function generate(present_modices) {
       pilot_str = sheet.getCell(PILOT_ROW, j).value;
       pilot_modex = Number(pilot_str.match(modex_regex));
       if (!present_modices.includes(pilot_modex)) continue;
-      if (needs_IQT.includes(pilot_modex)) continue;
-      if (needs_MCQ.includes(pilot_modex)) continue;
+      // if (needs_IQT.includes(pilot_modex)) continue;
+      // if (needs_MCQ.includes(pilot_modex)) continue;
 
       cell_value = sheet.getCell(i, j).value;
       if (cell_value == "NOGO" || cell_value == 'FOCUS') {
