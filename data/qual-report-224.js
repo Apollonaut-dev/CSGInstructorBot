@@ -69,6 +69,7 @@ export async function generate(present_modices) {
 
     for (let j = DATA_COL_START; j < N_COLS; j++) {
       pilot_str = sheet.getCell(PILOT_ROW, j).value;
+      if (!pilot_str) continue;
       pilot_modex = Number(pilot_str.match(modex_regex));
       if (!present_modices.includes(pilot_modex)) continue;
 
@@ -94,6 +95,7 @@ export async function generate(present_modices) {
 
     for (let j = DATA_COL_START; j < N_COLS; j++) {
       pilot_str = sheet.getCell(PILOT_ROW, j).value;
+      if (!pilot_str) continue;
       pilot_modex = Number(pilot_str.match(modex_regex));
       if (!present_modices.includes(pilot_modex)) continue;
       // if (needs_IQT.includes(pilot_modex)) continue;
