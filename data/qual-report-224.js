@@ -6,7 +6,7 @@ import { modex_regex, qual_report_comparator } from './util.js';
 const GOOGLE_SHEET_ID_224 = "1G58gg-BKW-fpYPudBMDZztFism5FJ_OME9kvzvjxm2w";
 const TRAINING_SHEET_INDEX = 1;
 
-generate([403, 460, 402, 401, 453, 413, 415, 416, 417])
+generate([403, 460, 402, 401, 453, 413, 415, 416, 417, 460])
 
 // @param string[] present_modices -- array of strings containing 2-3 digit modices of each pilot present in the 224 Ready Room at the time of execution. If nil print training info for the entire roster
 // @returns string -- containing the generated report TODO consider returning an object so it can be formatted with discord message components
@@ -22,10 +22,10 @@ export async function generate(present_modices) {
   const nROWS = sheet.rowCount;
   const nCOLS = sheet.columnCount;
   
-  const DATA_ROW_START = 3;
+  const DATA_ROW_START = 5;
   const DATA_COL_START = 23;
 
-  const PILOT_ROW = 2;
+  const PILOT_ROW = 1;
   const QUAL_COL = 1;
 
   // get current pilot name strings from the pilot header row
@@ -62,17 +62,20 @@ export async function generate(present_modices) {
     if (!quals[prev_milestone][prev_category][prev_qual]) quals[prev_milestone][prev_category][prev_qual] = [];
     
     console.log(`${prev_milestone} | ${prev_category} | ${prev_qual}`);
-    console.log(quals[prev_milsetone][prev_category][prev_qual].)
     
     for (let j = DATA_COL_START; j < nCOLS; j++) {
       entry = sheet.getCell(i, j).value;
-      if (entry == 'NOGO') continue;
+      // console.log(`entry: ${entry}`)
+      if (entry != 'NOGO' && entry != 'FOCUS') continue;
       pilot = sheet.getCell(PILOT_ROW, j).value
+      // console.log(`pilot: ${pilot}`)
       if (!pilot) continue;
       modex = Number(pilot.match(modex_regex));
+      // console.log(`modex: ${modex}`)
       if (!present_modices.includes(modex)) continue;
-      quals[milestone][category][qual].push(pilot);
+      quals[prev_milestone][prev_category][prev_qual].push(pilot);
     }
+    console.log(quals[prev_milestone][prev_category][prev_qual].join(', '))
   }
   return;
 }
