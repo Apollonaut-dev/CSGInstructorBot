@@ -51,9 +51,13 @@ export async function generate(present_modices) {
     category = sheet.getCell(i, 1).value;
     qual = sheet.getCell(i, 2).value;
     
-    if (!quals[milestone]) quals[milestone] = {};
-    if (!quals[milestone][category]) quals[milestone][category] = {};
-    if (!quals[milestone][category][qual]) quals[milestone][category][qual] = [];
+    if (milestone != 'null') prev_milestone = milestone;
+    if (category) prev_category = category;
+    if (qual) prev_qual = qual;
+    
+    if (!quals[prev_milestone]) quals[prev_milestone] = {};
+    if (!quals[prev_milestone][prev_category]) quals[prev_milestone][prev_category] = {};
+    if (!quals[prev_milestone][prev_category][prev_qual]) quals[prev_milestone][prev_category][prev_qual] = [];
     
     console.log(`${milestone} | ${category} | ${qual}`);
     
@@ -66,10 +70,9 @@ export async function generate(present_modices) {
       if (!present_modices.includes(modex)) continue;
       quals[milestone][category][qual].push(pilot);
     }
-    
-    prev_milestone = milestone;
-    prev_category = category;
-    prev_qual = qual;
+    // if (milestone) prev_milestone = milestone;
+    // if (category) prev_category = category;
+    // if (qual) prev_qual = qual;
   }
   return;
 }
