@@ -46,34 +46,14 @@ export async function generate(present_modices) {
     if (!quals[milestone][category][qual]) quals[milestone][category][qual] = [];
     
     for (let j = DATA_COL_START; j < nCOLS; j++) {
+      console.log(`${milestone}-${category}-${qual}: ${pilot}`)
       entry = sheet.getCell(i, j).value;
       if (entry == 'NOGO') continue;
       pilot = sheet.getCell(PILOT_ROW, j).value
-      quals[milestone][category][qual].push()
+      modex = Number(pilot.match(modex_regex));
+      if (!present_modices.include(modex)) continue;
+      quals[milestone][category][qual].push(pilot)
     }
   }
-
-  // TODO can probably use a little more abstraction instead of copypasta static code but it works and IQT, MCQ, CMQ, CQ and supplemental are well-defined categories
-  // row boundaries will be different for different CSG3 squadrons
-  const IQT_qual_count_map = {};
-  const MCQ_qual_count_map = {};
-  const CQ_qual_count_map = {};
-  const CMQ_qual_count_map = {};
-  const supplemental_qual_count_map = {};
-
-  // save all quals
-  const quals = [];
-  // temp/loop variables
-  let cell_value;
-  let qual;
-  let pilot_str;
-  let pilot_modex;
-
-  const IQT_qual_reports = [];
-  const MCQ_qual_reports = [];
-  const CQ_qual_reports = [];
-  const CMQ_qual_reports = [];
-  const supplemental_qual_reports = [];
-  
   
 }
