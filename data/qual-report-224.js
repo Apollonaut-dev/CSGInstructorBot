@@ -11,6 +11,7 @@ generate([400, 401, 402, 403, 404, 405, 406, 407, 410, 411, 412, 413, 414, 415, 
 // @param string[] present_modices -- array of strings containing 2-3 digit modices of each pilot present in the 224 Ready Room at the time of execution. If nil print training info for the entire roster
 // @returns string -- containing the generated report TODO consider returning an object so it can be formatted with discord message components
 export async function generate(present_modices) {
+  const _MS_MONTH = 30*24*60*60*1000;
   const doc = new GoogleSpreadsheet(GOOGLE_SHEET_ID_224, serviceAccountAuth);
 
   await doc.loadInfo(); // loads document properties and worksheets
@@ -52,6 +53,7 @@ export async function generate(present_modices) {
     category = sheet.getCell(i, 1).value;
     qual = sheet.getCell(i, 2).value;
     
+    
     // console.log(`${milestone}:${prev_milestone}`);
     
     if (milestone != null) prev_milestone = milestone;
@@ -89,13 +91,17 @@ export async function generate(present_modices) {
   // console.log(milestone_flattened);'
   let mm, dd, yy;
   let qual_date; 
+  let diff;
   // https://developers.google.com/sheets/api/guides/formats?hl=en
-  const google_sheets_epoch = new Date(1899, 12, 30);
+  let google_sheets_epoch = new Date(1899, 12, 30);
   
   const today = new Date();
+  
   let str = "<=== Upcoming CQ expiries ===>";
   str += '\tCase I\n'
   for (let j = DATA_COL_START; j < nCOLS; j++) {
+    google_sheets_epoch = new Date(1899, 12, 30);
+    
     entry = sheet.getCell(3, j).value;
     if (!entry) entry = 0;
     console.log(entry);
@@ -105,17 +111,13 @@ export async function generate(present_modices) {
     const utc_qual = Date.UTC(qual_date.getFullYear(), qual_date.getMonth(), qual_date.getDate());
     const utc_today = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate());
     
+    diff = Math.floor(utc_today - utc_qual)/_MS_MONTH;
     
-    
-    // [mm, dd, yy ] = entry.split('/');
-    // qual_date = new Date(yy, mm, dd);
-    console.log(qual_date);
-    if (entry != 'NOGO' && entry != 'FOCUS') continue;
+    if (diff < 5) continue;
     pilot = sheet.getCell(PILOT_ROW, j).value
     if (!pilot) continue;
     modex = Number(pilot.match(modex_regex));
     if (!present_modices.includes(modex)) continue;
-  
   }
   
   
