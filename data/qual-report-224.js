@@ -4,7 +4,7 @@ import serviceAccountAuth from "../services/google.js";
 import { modex_regex, qual_report_comparator } from './util.js';
 
 const GOOGLE_SHEET_ID_224 = "1G58gg-BKW-fpYPudBMDZztFism5FJ_OME9kvzvjxm2w";
-const TRAINING_SHEET_INDEX = 0;
+const TRAINING_SHEET_INDEX = 1;
 
 generate([403, 460, 402, 401, 453])
 
@@ -23,7 +23,7 @@ export async function generate(present_modices) {
   const nCOLS = sheet.columnCount;
   
   const DATA_ROW_START = 4;
-  const DATA_COL_START = 3;
+  const DATA_COL_START = 2;
 
   const PILOT_ROW = 2;
   const QUAL_COL = 1;
@@ -39,7 +39,7 @@ export async function generate(present_modices) {
   let entry;
   let modex;
   
-  for (let i = DATA_ROW_START; i < nROWS; i++) {
+  for (let i = DATA_ROW_START; i < 122; i++) {
     milestone = sheet.getCell(i, 1).value;
     category = sheet.getCell(i, 2).value;
     qual = sheet.getCell(i, 3).value;
@@ -47,15 +47,19 @@ export async function generate(present_modices) {
     if (!quals[milestone]) quals[milestone] = {};
     if (!quals[milestone][category]) quals[milestone][category] = {};
     if (!quals[milestone][category][qual]) quals[milestone][category][qual] = [];
+    
     console.log(`${milestone}-${category}-${qual}`);
+    
     for (let j = DATA_COL_START; j < nCOLS; j++) {
       entry = sheet.getCell(i, j).value;
       if (entry == 'NOGO') continue;
       pilot = sheet.getCell(PILOT_ROW, j).value
+      if (!pilot) continue;
       modex = Number(pilot.match(modex_regex));
       if (!present_modices.includes(modex)) continue;
       quals[milestone][category][qual].push(pilot);
     }
   }
+  
   return;
 }
