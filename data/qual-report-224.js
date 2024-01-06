@@ -11,7 +11,6 @@ generate([403, 460, 402, 401, 453, 413, 415, 416, 417, 460])
 // @param string[] present_modices -- array of strings containing 2-3 digit modices of each pilot present in the 224 Ready Room at the time of execution. If nil print training info for the entire roster
 // @returns string -- containing the generated report TODO consider returning an object so it can be formatted with discord message components
 export async function generate(present_modices) {
-  console.log(present_modices);
   const doc = new GoogleSpreadsheet(GOOGLE_SHEET_ID_224, serviceAccountAuth);
 
   await doc.loadInfo(); // loads document properties and worksheets
@@ -61,24 +60,33 @@ export async function generate(present_modices) {
     if (!quals[prev_milestone][prev_category]) quals[prev_milestone][prev_category] = {};
     if (!quals[prev_milestone][prev_category][prev_qual]) quals[prev_milestone][prev_category][prev_qual] = [];
     
-    console.log(`${prev_milestone} | ${prev_category} | ${prev_qual}`);
+    // console.log(`${prev_milestone} | ${prev_category} | ${prev_qual}`);
     
     for (let j = DATA_COL_START; j < nCOLS; j++) {
       entry = sheet.getCell(i, j).value;
-      // console.log(`entry: ${entry}`)
       if (entry != 'NOGO' && entry != 'FOCUS') continue;
       pilot = sheet.getCell(PILOT_ROW, j).value
-      // console.log(`pilot: ${pilot}`)
       if (!pilot) continue;
       modex = Number(pilot.match(modex_regex));
-      // console.log(`modex: ${modex}`)
-      // console.log(`![${present_modices}].includes(${modex}): ${present_modices.includes(modex)}`);
       if (!present_modices.includes(modex)) continue;
-      
-      // console.log(`modex: ${modex}`)
       quals[prev_milestone][prev_category][prev_qual].push(pilot);
     }
-    console.log(quals[prev_milestone][prev_category][prev_qual].join(', '))
+    // console.log(quals[prev_milestone][prev_category][prev_qual].join(', '))
   }
+  let str = "";
+  
+  for (const [kMilestone, vCategory] of Object.entries(quals)) {
+    // milestone
+    console.log(`============${kMilestone}============`)
+    for (const [kCategory, vQual] of Object.entries(vCategory)) {
+      // category
+      console.log(`\t${kCategory}`)
+      console.log(vQual)
+      // for (const pilot of vQual) {
+      //   console.log(`\t\t${vQual}`)
+      // }
+    }
+  }
+  
   return;
 }
