@@ -73,30 +73,28 @@ export async function generate(present_modices) {
     }
     // console.log(quals[prev_milestone][prev_category][prev_qual].join(', '))
   }
-  let str = "";
   let flattened;
+  let milestone_flattened = {};
+  let arr;
   for (const [kMilestone, vCategory] of Object.entries(quals)) {
     // milestone
     str += `============${kMilestone}============\n`
     flattened = {};
     for (const [kCategory, vQual] of Object.entries(vCategory)) {
-      // category
-//       arr.push(vQual);
-//       arr = arr.sort((a, b) => Math.max(a.length, b.length))
       flattened = {...flattened, ...vQual}
-      
-      
-      // str += `\t${kCategory}\n`
-      // for (const [kQual, vPilots] of Object.entries(vQual)) {
-      //   // qual
-      //   str += `\t\t${kQual}\n`
-      //   console.log('\t\t\t'+vPilots.join(', '))
-      //   str += '\t\t\t'+vPilots.join(', ')+'\n'
-      // }
     }
-    const arr = Object.keys(flattened).sort((a, b) => a.length < b.length)
-    console.log(arr)
+    arr = Object.keys(flattened).sort((a, b) => a.length < b.length)
+    milestone_flattened[kMilestone] = arr;
+  }
+  let str = "";
+  
+  for (const [kMilstone, vQual] of Object.entries(milestone_flattened)) {
+    
+    for (let i = 0; i < 5; i++) {
+      
+    }
   }
   
+  console.log(milestone_flattened);
   return str;
 }
