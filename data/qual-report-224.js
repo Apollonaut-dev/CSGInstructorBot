@@ -72,12 +72,18 @@ export async function generate(present_modices) {
     // console.log(quals[prev_milestone][prev_category][prev_qual].join(', '))
   }
   let str = "";
-  
+  let arr;
   for (const [kMilestone, vCategory] of Object.entries(quals)) {
     // milestone
     str += `============${kMilestone}============\n`
+    arr = [];
     for (const [kCategory, vQual] of Object.entries(vCategory)) {
       // category
+//       arr.push(vQual);
+//       arr = arr.sort((a, b) => Math.max(a.length, b.length))
+      
+      
+      
       str += `\t${kCategory}\n`
       for (const [kQual, vPilots] of Object.entries(vQual)) {
         // qual
