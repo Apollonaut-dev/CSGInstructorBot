@@ -51,17 +51,17 @@ export async function generate(present_modices) {
     category = sheet.getCell(i, 1).value;
     qual = sheet.getCell(i, 2).value;
     
-    console.log(milestone)
+    // console.log(`${milestone}:${prev_milestone}`);
     
-    if (milestone != 'null') prev_milestone = milestone;
-    if (category) prev_category = category;
-    if (qual) prev_qual = qual;
+    if (milestone != null) prev_milestone = milestone;
+    if (category != null) prev_category = category;
+    if (qual != null) prev_qual = qual;
     
     if (!quals[prev_milestone]) quals[prev_milestone] = {};
     if (!quals[prev_milestone][prev_category]) quals[prev_milestone][prev_category] = {};
     if (!quals[prev_milestone][prev_category][prev_qual]) quals[prev_milestone][prev_category][prev_qual] = [];
     
-    // console.log(`${milestone} | ${category} | ${qual}`);
+    console.log(`${milestone} | ${category} | ${qual}`);
     
     for (let j = DATA_COL_START; j < nCOLS; j++) {
       entry = sheet.getCell(i, j).value;
