@@ -17,6 +17,9 @@ export async function generate(present_modices) {
   // grab all cells now since we'll need to check (almost) all of them
   const cells = await sheet.loadCells();
   
+  const nROWS = sheet.rowCount;
+  const nCOLS = sheet.columnCount;
+  
   const DATA_ROW_START = 4;
   const DATA_COL_START = 2;
 
@@ -27,6 +30,9 @@ export async function generate(present_modices) {
   const pilots = {}; 
   const quals = {};
   
+  for (let i = DATA_COL_START; i < nCOLS; i++) {
+    pilots[sheet.getCell(PILOT_ROW, i).value] 
+  }
 
   // TODO can probably use a little more abstraction instead of copypasta static code but it works and IQT, MCQ, CMQ, CQ and supplemental are well-defined categories
   // row boundaries will be different for different CSG3 squadrons
@@ -49,5 +55,6 @@ export async function generate(present_modices) {
   const CQ_qual_reports = [];
   const CMQ_qual_reports = [];
   const supplemental_qual_reports = [];
+  
   
 }
