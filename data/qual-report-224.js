@@ -88,20 +88,22 @@ export async function generate(present_modices) {
   
   // console.log(milestone_flattened);'
   let mm, dd, yy;
-  let qual_date;
+  let qual_date; 
+  const today = new Date();
   let str = "<=== Upcoming CQ expiries ===>";
   str += '\tCase I\n'
-  for (let j = DATA_COL_START; j < nCOLS; j++) {
-    entry = sheet.getCell(CaseIReQual, j).value;
-    [mm, dd, yy ] = entry.split('/');
-    qual_date = new Date(yy, mm, dd);
+  for (let j = 0; j < nCOLS; j++) {
+    entry = sheet.getCell(3, j).value;
+    console.log(entry)
+    // [mm, dd, yy ] = entry.split('/');
+    // qual_date = new Date(yy, mm, dd);
     
     if (entry != 'NOGO' && entry != 'FOCUS') continue;
     pilot = sheet.getCell(PILOT_ROW, j).value
     if (!pilot) continue;
     modex = Number(pilot.match(modex_regex));
     if (!present_modices.includes(modex)) continue;
-    
+  
   }
   
   
@@ -117,6 +119,6 @@ export async function generate(present_modices) {
     }
   }
   
-  console.log(str);
+  // console.log(str);
   return str;
 }
