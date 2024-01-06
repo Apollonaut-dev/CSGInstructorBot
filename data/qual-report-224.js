@@ -11,7 +11,7 @@ generate([403, 460, 402, 401, 453, 413, 415, 416, 417, 460])
 // @param string[] present_modices -- array of strings containing 2-3 digit modices of each pilot present in the 224 Ready Room at the time of execution. If nil print training info for the entire roster
 // @returns string -- containing the generated report TODO consider returning an object so it can be formatted with discord message components
 export async function generate(present_modices) {
-  
+  console.log(present_modices);
   const doc = new GoogleSpreadsheet(GOOGLE_SHEET_ID_224, serviceAccountAuth);
 
   await doc.loadInfo(); // loads document properties and worksheets
@@ -23,7 +23,7 @@ export async function generate(present_modices) {
   const nCOLS = sheet.columnCount;
   
   const DATA_ROW_START = 5;
-  const DATA_COL_START = 23;
+  const DATA_COL_START = 3;
 
   const PILOT_ROW = 1;
   const QUAL_COL = 1;
@@ -71,8 +71,11 @@ export async function generate(present_modices) {
       // console.log(`pilot: ${pilot}`)
       if (!pilot) continue;
       modex = Number(pilot.match(modex_regex));
+      // console.log(`modex: ${modex}`)
+      // console.log(`![${present_modices}].includes(${modex}): ${present_modices.includes(modex)}`);
       if (!present_modices.includes(modex)) continue;
-      console.log(`modex: ${modex}`)
+      
+      // console.log(`modex: ${modex}`)
       quals[prev_milestone][prev_category][prev_qual].push(pilot);
     }
     console.log(quals[prev_milestone][prev_category][prev_qual].join(', '))
