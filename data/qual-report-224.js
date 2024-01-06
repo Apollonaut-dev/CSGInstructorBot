@@ -22,7 +22,7 @@ export async function generate(present_modices) {
   const nROWS = sheet.rowCount;
   const nCOLS = sheet.columnCount;
   
-  const DATA_ROW_START = 4;
+  const DATA_ROW_START = 3;
   const DATA_COL_START = 23;
 
   const PILOT_ROW = 2;
@@ -70,9 +70,6 @@ export async function generate(present_modices) {
       if (!present_modices.includes(modex)) continue;
       quals[milestone][category][qual].push(pilot);
     }
-    // if (milestone) prev_milestone = milestone;
-    // if (category) prev_category = category;
-    // if (qual) prev_qual = qual;
   }
   return;
 }
