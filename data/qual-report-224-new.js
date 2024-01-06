@@ -30,8 +30,13 @@ export async function generate(present_modices) {
   const pilots = {}; 
   const quals = {};
   
-  for (let i = DATA_COL_START; i < nCOLS; i++) {
-    pilots[sheet.getCell(PILOT_ROW, i).value] 
+  let pilot;
+  let milestone;
+  let 
+  let qual;
+  
+  for (let i = DATA_ROW_START; i < nROWS; i++) {
+    
   }
 
   // TODO can probably use a little more abstraction instead of copypasta static code but it works and IQT, MCQ, CMQ, CQ and supplemental are well-defined categories
