@@ -71,7 +71,7 @@ export async function generate(present_modices) {
       // console.log(`pilot: ${pilot}`)
       if (!pilot) continue;
       modex = Number(pilot.match(modex_regex));
-      // console.log(`modex: ${modex}`)
+      console.log(`modex: ${modex}`)
       if (!present_modices.includes(modex)) continue;
       quals[prev_milestone][prev_category][prev_qual].push(pilot);
     }
