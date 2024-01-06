@@ -89,15 +89,27 @@ export async function generate(present_modices) {
   // console.log(milestone_flattened);'
   let mm, dd, yy;
   let qual_date; 
+  // https://developers.google.com/sheets/api/guides/formats?hl=en
+  const google_sheets_epoch = new Date(1899, 12, 30);
+  
   const today = new Date();
   let str = "<=== Upcoming CQ expiries ===>";
   str += '\tCase I\n'
-  for (let j = 0; j < nCOLS; j++) {
+  for (let j = DATA_COL_START; j < nCOLS; j++) {
     entry = sheet.getCell(3, j).value;
+    if (!entry) entry = 0;
     console.log(entry);
+    
+    qual_date = google_sheets_epoch.setDate(Number(entry))
+    
+    const utc_qual = Date.UTC(qual_date.getFullYear(), qual_date.getMonth(), qual_date.getDate());
+    const utc_today = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate());
+    
+    
+    
     // [mm, dd, yy ] = entry.split('/');
     // qual_date = new Date(yy, mm, dd);
-    
+    console.log(qual_date);
     if (entry != 'NOGO' && entry != 'FOCUS') continue;
     pilot = sheet.getCell(PILOT_ROW, j).value
     if (!pilot) continue;
