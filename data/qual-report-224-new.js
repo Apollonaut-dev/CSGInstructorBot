@@ -21,7 +21,7 @@ export async function generate(present_modices) {
   const nCOLS = sheet.columnCount;
   
   const DATA_ROW_START = 4;
-  const DATA_COL_START = 2;
+  const DATA_COL_START = 3;
 
   const PILOT_ROW = 2;
   const QUAL_COL = 1;
@@ -32,11 +32,25 @@ export async function generate(present_modices) {
   
   let pilot;
   let milestone;
-  let 
+  let category;
   let qual;
+  let entry;
   
   for (let i = DATA_ROW_START; i < nROWS; i++) {
+    milestone = sheet.getCell(i, 1).value;
+    category = sheet.getCell(i, 2).value;
+    qual = sheet.getCell(i, 3).value;
     
+    if (!quals[milestone]) quals[milestone] = {};
+    if (!quals[milestone][category]) quals[milestone][category] = {};
+    if (!quals[milestone][category][qual]) quals[milestone][category][qual] = [];
+    
+    for (let j = DATA_COL_START; j < nCOLS; j++) {
+      entry = sheet.getCell(i, j).value;
+      if (entry == 'NOGO') continue;
+      pilot = sheet.getCell(PILOT_ROW, j).value
+      quals[milestone][category][qual].push()
+    }
   }
 
   // TODO can probably use a little more abstraction instead of copypasta static code but it works and IQT, MCQ, CMQ, CQ and supplemental are well-defined categories
