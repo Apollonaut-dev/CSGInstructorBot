@@ -91,7 +91,7 @@ export async function generate(present_modices) {
     str += `=== ${kMilestone} ===\n`;
     arr = Object.keys(vQuals).sort((a, b) => a.length > b.length);
     
-    for (let i = 0; i < Math.max(5, arr.length); i++) {
+    for (let i = 0; i < Math.min(5, arr.length); i++) {
       str += `\t${arr[i]}:${vQuals[arr[i]].length}\n`
       str += `\t\t${vQuals[arr[i]].join(', ')}\n`
     }
