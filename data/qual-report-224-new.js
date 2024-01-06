@@ -6,6 +6,8 @@ import { modex_regex, qual_report_comparator } from './util.js';
 const GOOGLE_SHEET_ID_224 = "1G58gg-BKW-fpYPudBMDZztFism5FJ_OME9kvzvjxm2w";
 const TRAINING_SHEET_INDEX = 0;
 
+generate([403, 460, 402, 401, 453])
+
 // @param string[] present_modices -- array of strings containing 2-3 digit modices of each pilot present in the 224 Ready Room at the time of execution. If nil print training info for the entire roster
 // @returns string -- containing the generated report TODO consider returning an object so it can be formatted with discord message components
 export async function generate(present_modices) {
@@ -35,6 +37,7 @@ export async function generate(present_modices) {
   let category;
   let qual;
   let entry;
+  let modex;
   
   for (let i = DATA_ROW_START; i < nROWS; i++) {
     milestone = sheet.getCell(i, 1).value;
@@ -44,9 +47,8 @@ export async function generate(present_modices) {
     if (!quals[milestone]) quals[milestone] = {};
     if (!quals[milestone][category]) quals[milestone][category] = {};
     if (!quals[milestone][category][qual]) quals[milestone][category][qual] = [];
-    
+    console.log(`${milestone}-${category}-${qual}`);
     for (let j = DATA_COL_START; j < nCOLS; j++) {
-      console.log(`${milestone}-${category}-${qual}: ${pilot}`)
       entry = sheet.getCell(i, j).value;
       if (entry == 'NOGO') continue;
       pilot = sheet.getCell(PILOT_ROW, j).value
