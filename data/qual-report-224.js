@@ -23,7 +23,7 @@ export async function generate(present_modices) {
   const nCOLS = sheet.columnCount;
   
   const DATA_ROW_START = 4;
-  const DATA_COL_START = 2;
+  const DATA_COL_START = 23;
 
   const PILOT_ROW = 2;
   const QUAL_COL = 1;
@@ -33,22 +33,29 @@ export async function generate(present_modices) {
   const quals = {};
   
   let pilot;
+  
   let milestone;
+  let prev_milestone;
+  
   let category;
+  let prev_category;
+  
   let qual;
+  let prev_qual;
+  
   let entry;
   let modex;
   
   for (let i = DATA_ROW_START; i < 122; i++) {
-    milestone = sheet.getCell(i, 1).value;
-    category = sheet.getCell(i, 2).value;
-    qual = sheet.getCell(i, 3).value;
+    milestone = sheet.getCell(i, 0).value;
+    category = sheet.getCell(i, 1).value;
+    qual = sheet.getCell(i, 2).value;
     
     if (!quals[milestone]) quals[milestone] = {};
     if (!quals[milestone][category]) quals[milestone][category] = {};
     if (!quals[milestone][category][qual]) quals[milestone][category][qual] = [];
     
-    console.log(`${milestone}-${category}-${qual}`);
+    console.log(`${milestone} | ${category} | ${qual}`);
     
     for (let j = DATA_COL_START; j < nCOLS; j++) {
       entry = sheet.getCell(i, j).value;
@@ -59,7 +66,7 @@ export async function generate(present_modices) {
       if (!present_modices.includes(modex)) continue;
       quals[milestone][category][qual].push(pilot);
     }
+    
   }
-  
   return;
 }
