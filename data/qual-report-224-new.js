@@ -27,7 +27,7 @@ export async function generate(present_modices) {
   const cells = await sheet.loadCells();
 
   // get current pilot name strings from the pilot header row
-  const pilots = [];
+  const pilots = []; 
   
 
   // TODO can probably use a little more abstraction instead of copypasta static code but it works and IQT, MCQ, CMQ, CQ and supplemental are well-defined categories
