@@ -93,21 +93,23 @@ export async function generate(present_modices) {
   let qual_date; 
   let diff;
   // https://developers.google.com/sheets/api/guides/formats?hl=en
-  let google_sheets_epoch = new Date(1899, 12, 30);
+  let google_sheets_epoch = new Date("1899-12-30");
   
   const today = new Date();
   
   let str = "<=== Upcoming CQ expiries ===>";
   str += '\tCase I\n'
   for (let j = DATA_COL_START; j < nCOLS; j++) {
-    google_sheets_epoch = new Date(1899, 12, 30);
     
     entry = sheet.getCell(3, j).value;
     if (!entry) entry = 0;
-    console.log(entry);
     
-    qual_date = google_sheets_epoch.setDate(Number(entry))
+    qual_date = new Date(`${1899}-${12}-${30 + entry}`)
     
+    console.log(qual_date);
+    console.log(today)
+    
+    // const utc_qual = Date.UTC(qual_date.getFullYear(), qual_date.getMonth(), qual_date.getDate());
     const utc_qual = Date.UTC(qual_date.getFullYear(), qual_date.getMonth(), qual_date.getDate());
     const utc_today = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate());
     
