@@ -25,7 +25,8 @@ export async function generate(present_modices) {
   const DATA_COL_START = 3;
 
   const PILOT_ROW = 1;
-  const CaseI
+  const CaseIReQual = 3;
+  const CaseIIIReQual = 4;
   const QUAL_COL = 1;
 
   // get current pilot name strings from the pilot header row
@@ -85,17 +86,23 @@ export async function generate(present_modices) {
     milestone_flattened[kMilestone] = flattened;
   }
   
-  // console.log(milestone_flattened);
+  // console.log(milestone_flattened);'
+  let mm, dd, yy;
+  let qual_date;
   let str = "<=== Upcoming CQ expiries ===>";
+  str += '\tCase I\n'
   for (let j = DATA_COL_START; j < nCOLS; j++) {
-      entry = sheet.getCell(i, j).value;
-      if (entry != 'NOGO' && entry != 'FOCUS') continue;
-      pilot = sheet.getCell(, j).value
-      if (!pilot) continue;
-      modex = Number(pilot.match(modex_regex));
-      if (!present_modices.includes(modex)) continue;
-      quals[prev_milestone][prev_category][prev_qual].push(pilot);
-    }
+    entry = sheet.getCell(CaseIReQual, j).value;
+    [mm, dd, yy ] = entry.split('/');
+    qual_date = new Date(yy, mm, dd);
+    
+    if (entry != 'NOGO' && entry != 'FOCUS') continue;
+    pilot = sheet.getCell(PILOT_ROW, j).value
+    if (!pilot) continue;
+    modex = Number(pilot.match(modex_regex));
+    if (!present_modices.includes(modex)) continue;
+    
+  }
   
   
   
