@@ -86,10 +86,14 @@ export async function generate(present_modices) {
   
   // console.log(milestone_flattened);
   let str = "";
+  
+  
+  
+  
   let arr;
   for (const [kMilestone, vQuals] of Object.entries(milestone_flattened)) {
     str += `=== ${kMilestone} ===\n`;
-    arr = Object.keys(vQuals).sort((a, b) => a.length > b.length);
+    arr = Object.keys(vQuals).sort((a, b) => b.length - a.length);
     
     for (let i = 0; i < Math.min(5, arr.length); i++) {
       str += `\t${arr[i]}:${vQuals[arr[i]].length}\n`
