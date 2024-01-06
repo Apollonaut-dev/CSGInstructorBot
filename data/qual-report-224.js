@@ -74,19 +74,23 @@ export async function generate(present_modices) {
     // console.log(quals[prev_milestone][prev_category][prev_qual].join(', '))
   }
   let str = "";
+  console.log(quals);
   
-  for (const [kMilestone, vCategory] of Object.entries(quals)) {
-    // milestone
-    console.log(`============${kMilestone}============`)
-    for (const [kCategory, vQual] of Object.entries(vCategory)) {
-      // category
-      console.log(`\t${kCategory}`)
-      console.log(vQual)
-      // for (const pilot of vQual) {
-      //   console.log(`\t\t${vQual}`)
-      // }
-    }
-  }
+//   for (const [kMilestone, vCategory] of Object.entries(quals)) {
+//     // milestone
+//     console.log(`============${kMilestone}============`)
+//     for (const [kCategory, vQual] of Object.entries(vCategory)) {
+//       // category
+//       // console.log(`\t${kCategory}`)
+//       for (const [kQual, vPilots] of Object.entries(vCategory)) {
+//         // qual
+//         console.log(`\t${kQual}`)
+//         for (const pilot in vPilots) {
+//           console.log(`\t\t${pilot}`)
+//         }
+//       }
+//     }
+//   }
   
   return;
 }
