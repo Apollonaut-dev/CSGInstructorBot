@@ -6,28 +6,26 @@ import { modex_regex, qual_report_comparator } from './util.js';
 const GOOGLE_SHEET_ID_224 = "1G58gg-BKW-fpYPudBMDZztFism5FJ_OME9kvzvjxm2w";
 const TRAINING_SHEET_INDEX = 0;
 
-const N_ROWS = 138;
-const N_COLS = 27;
-
-const DATA_ROW_START = 4;
-const DATA_COL_START = 2;
-
-const PILOT_ROW = 2;
-const QUAL_COL = 1;
-
-
 // @param string[] present_modices -- array of strings containing 2-3 digit modices of each pilot present in the 224 Ready Room at the time of execution. If nil print training info for the entire roster
 // @returns string -- containing the generated report TODO consider returning an object so it can be formatted with discord message components
 export async function generate(present_modices) {
+  
   const doc = new GoogleSpreadsheet(GOOGLE_SHEET_ID_224, serviceAccountAuth);
 
   await doc.loadInfo(); // loads document properties and worksheets
   const sheet = doc.sheetsByIndex[TRAINING_SHEET_INDEX]; // or use `doc.sheetsById[id]` or `doc.sheetsByTitle[title]`
   // grab all cells now since we'll need to check (almost) all of them
   const cells = await sheet.loadCells();
+  
+  const DATA_ROW_START = 4;
+  const DATA_COL_START = 2;
+
+  const PILOT_ROW = 2;
+  const QUAL_COL = 1;
 
   // get current pilot name strings from the pilot header row
-  const pilots = []; 
+  const pilots = {}; 
+  const quals = {};
   
 
   // TODO can probably use a little more abstraction instead of copypasta static code but it works and IQT, MCQ, CMQ, CQ and supplemental are well-defined categories
