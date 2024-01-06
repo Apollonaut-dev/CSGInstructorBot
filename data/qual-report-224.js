@@ -94,7 +94,7 @@ export async function generate(present_modices) {
   str += '\tCase I\n'
   for (let j = 0; j < nCOLS; j++) {
     entry = sheet.getCell(3, j).value;
-    console.log(entry)
+    console.log(entry);
     // [mm, dd, yy ] = entry.split('/');
     // qual_date = new Date(yy, mm, dd);
     
