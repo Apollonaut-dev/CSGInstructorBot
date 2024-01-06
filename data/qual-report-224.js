@@ -88,28 +88,27 @@ export async function generate(present_modices) {
     milestone_flattened[kMilestone] = flattened;
   }
   
-  // console.log(milestone_flattened);'
-  let mm, dd, yy;
+  let str = "<=== Upcoming and overdue CQ expiries ===>\n";
+  str += '\tCase I\n'
+  const today = new Date();
+  const utc_today = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate());
+
   let qual_date; 
   let diff;
-  // https://developers.google.com/sheets/api/guides/formats?hl=en
-  let google_sheets_epoch = new Date("1899-12-30");
   
-  const today = new Date();
-  
-  let str = "<=== Upcoming CQ expiries ===>";
-  str += '\tCase I\n'
+  let needs_caseI = []
   for (let j = DATA_COL_START; j < nCOLS; j++) {
     
     entry = sheet.getCell(3, j).value;
     if (!entry) entry = 0;
     
+    // google sheets epoch: 1899-12-30
+    // https://developers.google.com/sheets/api/guides/formats?hl=en
     qual_date = new Date(`${1899}-${12}-${30}`)
     qual_date.setDate(qual_date.getDate() + Number(entry))
     
     // const utc_qual = Date.UTC(qual_date.getFullYear(), qual_date.getMonth(), qual_date.getDate());
     const utc_qual = Date.UTC(1899, 12, 30 + Number(entry));
-    const utc_today = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate());
     
     diff = Math.floor(utc_today - utc_qual)/_MS_MONTH;
     
@@ -118,10 +117,36 @@ export async function generate(present_modices) {
     if (!pilot) continue;
     modex = Number(pilot.match(modex_regex));
     if (!present_modices.includes(modex)) continue;
-    console.log(modex)
+    needs_caseI.push(modex);
   }
+  str += '\t\t' + needs_caseI.join(', ') + '\n'
   
+  str += '\tCase III\n'
   
+  let needs_caseIII = []
+  for (let j = DATA_COL_START; j < nCOLS; j++) {
+    
+    entry = sheet.getCell(4, j).value;
+    if (!entry) entry = 0;
+    
+    // google sheets epoch: 1899-12-30
+    // https://developers.google.com/sheets/api/guides/formats?hl=en
+    qual_date = new Date(`${1899}-${12}-${30}`)
+    qual_date.setDate(qual_date.getDate() + Number(entry))
+    
+    // const utc_qual = Date.UTC(qual_date.getFullYear(), qual_date.getMonth(), qual_date.getDate());
+    const utc_qual = Date.UTC(1899, 12, 30 + Number(entry));
+    
+    diff = Math.floor(utc_today - utc_qual)/_MS_MONTH;
+    
+    if (diff < 5) continue;
+    pilot = sheet.getCell(PILOT_ROW, j).value
+    if (!pilot) continue;
+    modex = Number(pilot.match(modex_regex));
+    if (!present_modices.includes(modex)) continue;
+    needs_caseIII.push(modex);
+  }
+  str += '\t\t' + needs_caseIII.join(', ') + '\n'
   
   let arr;
   for (const [kMilestone, vQuals] of Object.entries(milestone_flattened)) {
@@ -134,6 +159,6 @@ export async function generate(present_modices) {
     }
   }
   
-  // console.log(str);
+  console.log(str);
   return str;
 }
