@@ -67,6 +67,9 @@ export async function generate(present_modices) {
       quals[milestone][category][qual].push(pilot);
     }
     
+    prev_milestone = milestone;
+    prev_category = category;
+    prev_qual = qual;
   }
   return;
 }
