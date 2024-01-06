@@ -104,13 +104,11 @@ export async function generate(present_modices) {
     entry = sheet.getCell(3, j).value;
     if (!entry) entry = 0;
     
-    qual_date = new Date(`${1899}-${12}-${30 + entry}`)
-    
-    console.log(qual_date);
-    console.log(today)
+    qual_date = new Date(`${1899}-${12}-${30}`)
+    qual_date.setDate(qual_date.getDate() + Number(entry))
     
     // const utc_qual = Date.UTC(qual_date.getFullYear(), qual_date.getMonth(), qual_date.getDate());
-    const utc_qual = Date.UTC(qual_date.getFullYear(), qual_date.getMonth(), qual_date.getDate());
+    const utc_qual = Date.UTC(1899, 12, 30 + Number(entry));
     const utc_today = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate());
     
     diff = Math.floor(utc_today - utc_qual)/_MS_MONTH;
@@ -120,6 +118,7 @@ export async function generate(present_modices) {
     if (!pilot) continue;
     modex = Number(pilot.match(modex_regex));
     if (!present_modices.includes(modex)) continue;
+    console.log(modex)
   }
   
   
