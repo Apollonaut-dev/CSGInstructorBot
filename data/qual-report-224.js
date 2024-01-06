@@ -6,6 +6,7 @@ import { modex_regex, qual_report_comparator } from './util.js';
 const GOOGLE_SHEET_ID_224 = "1G58gg-BKW-fpYPudBMDZztFism5FJ_OME9kvzvjxm2w";
 const TRAINING_SHEET_INDEX = 1;
 
+//testing
 generate([400, 401, 402, 403, 404, 405, 406, 407, 410, 411, 412, 413, 414, 415, 416, 417, 450, 451, 452, 453, 454, 456, 457, 460])
 
 // @param string[] present_modices -- array of strings containing 2-3 digit modices of each pilot present in the 224 Ready Room at the time of execution. If nil print training info for the entire roster
@@ -88,7 +89,7 @@ export async function generate(present_modices) {
     milestone_flattened[kMilestone] = flattened;
   }
   
-  let str = "<=== Upcoming and overdue CQ expiries ===>\n";
+  let str = "=== Upcoming and overdue CQ expiries ===\n";
   str += '\tCase I\n'
   const today = new Date();
   const utc_today = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate());
@@ -154,7 +155,7 @@ export async function generate(present_modices) {
     arr = Object.keys(vQuals).sort((a, b) => b.length - a.length);
     
     for (let i = 0; i < Math.min(5, arr.length); i++) {
-      str += `\t${arr[i]}:${vQuals[arr[i]].length}\n`
+      str += `\t${arr[i]}: \t\t${vQuals[arr[i]].length}\n`
       str += `\t\t${vQuals[arr[i]].join(', ')}\n`
     }
   }
