@@ -6,6 +6,8 @@ import { modex_regex, qual_report_comparator } from './util.js';
 const GOOGLE_SHEET_ID_224 = "1G58gg-BKW-fpYPudBMDZztFism5FJ_OME9kvzvjxm2w";
 const TRAINING_SHEET_INDEX = 1;
 
+generate([400, 401, 402, 403, 404, 405, 406, 407, 410, 411, 412, 413, 414, 415, 416, 417, 450, 451, 452, 453, 454, 456, 457, 460])
+
 // @param string[] present_modices -- array of strings containing 2-3 digit modices of each pilot present in the 224 Ready Room at the time of execution. If nil print training info for the entire roster
 // @returns string -- containing the generated report TODO consider returning an object so it can be formatted with discord message components
 export async function generate(present_modices) {
@@ -72,26 +74,28 @@ export async function generate(present_modices) {
     // console.log(quals[prev_milestone][prev_category][prev_qual].join(', '))
   }
   let str = "";
-  let arr;
+  let flattened;
   for (const [kMilestone, vCategory] of Object.entries(quals)) {
     // milestone
     str += `============${kMilestone}============\n`
-    arr = [];
+    flattened = {};
     for (const [kCategory, vQual] of Object.entries(vCategory)) {
       // category
 //       arr.push(vQual);
 //       arr = arr.sort((a, b) => Math.max(a.length, b.length))
+      flattened = {...flattened, ...vQual}
       
       
-      
-      str += `\t${kCategory}\n`
-      for (const [kQual, vPilots] of Object.entries(vQual)) {
-        // qual
-        str += `\t\t${kQual}\n`
-        console.log('\t\t\t'+vPilots.join(', '))
-        str += '\t\t\t'+vPilots.join(', ')+'\n'
-      }
+      // str += `\t${kCategory}\n`
+      // for (const [kQual, vPilots] of Object.entries(vQual)) {
+      //   // qual
+      //   str += `\t\t${kQual}\n`
+      //   console.log('\t\t\t'+vPilots.join(', '))
+      //   str += '\t\t\t'+vPilots.join(', ')+'\n'
+      // }
     }
+    const arr = Object.keys(flattened).sort((a, b) => a.length < b.length)
+    console.log(arr)
   }
   
   return str;
