@@ -6,8 +6,6 @@ import { modex_regex, qual_report_comparator } from './util.js';
 const GOOGLE_SHEET_ID_224 = "1G58gg-BKW-fpYPudBMDZztFism5FJ_OME9kvzvjxm2w";
 const TRAINING_SHEET_INDEX = 1;
 
-generate([403, 460, 402, 401, 453, 413, 415, 416, 417, 460])
-
 // @param string[] present_modices -- array of strings containing 2-3 digit modices of each pilot present in the 224 Ready Room at the time of execution. If nil print training info for the entire roster
 // @returns string -- containing the generated report TODO consider returning an object so it can be formatted with discord message components
 export async function generate(present_modices) {
@@ -74,23 +72,21 @@ export async function generate(present_modices) {
     // console.log(quals[prev_milestone][prev_category][prev_qual].join(', '))
   }
   let str = "";
-  console.log(quals);
   
-//   for (const [kMilestone, vCategory] of Object.entries(quals)) {
-//     // milestone
-//     console.log(`============${kMilestone}============`)
-//     for (const [kCategory, vQual] of Object.entries(vCategory)) {
-//       // category
-//       // console.log(`\t${kCategory}`)
-//       for (const [kQual, vPilots] of Object.entries(vCategory)) {
-//         // qual
-//         console.log(`\t${kQual}`)
-//         for (const pilot in vPilots) {
-//           console.log(`\t\t${pilot}`)
-//         }
-//       }
-//     }
-//   }
+  for (const [kMilestone, vCategory] of Object.entries(quals)) {
+    // milestone
+    str += `============${kMilestone}============\n`
+    for (const [kCategory, vQual] of Object.entries(vCategory)) {
+      // category
+      str += `\t${kCategory}\n`
+      for (const [kQual, vPilots] of Object.entries(vQual)) {
+        // qual
+        str += `\t\t${kQual}\n`
+        console.log('\t\t\t'+vPilots.join(', '))
+        str += '\t\t\t'+vPilots.join(', ')+'\n'
+      }
+    }
+  }
   
-  return;
+  return str;
 }
