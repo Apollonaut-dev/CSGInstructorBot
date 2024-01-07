@@ -23,9 +23,9 @@ export async function generate(present_modices) {
   const nROWS = sheet.rowCount;
   const nCOLS = sheet.columnCount;
   
-  const DATA_ROW_START = 3;
+  const DATA_ROW_START = 5;
   const DATA_COL_START = 3;
-  console.log(sheet.getCell(3,3).value)
+  console.log(sheet.getCell(3,nCOLS-1).value)
 
   const PILOT_ROW = 1;
   const CaseIReQual = 3;
@@ -98,7 +98,7 @@ export async function generate(present_modices) {
     milestone_flattened[kMilestone] = flattened;
   }
   
-  let str = "=== Upcoming and overdue CQ expiries ===\n";
+  let str = "**=== Upcoming and overdue CQ expiries ===**\n";
   str += '\tCase I\n'
   const today = new Date();
   const utc_today = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate());
