@@ -152,11 +152,18 @@ export async function generate(present_modices) {
   let arr;
   for (const [kMilestone, vQuals] of Object.entries(milestone_flattened)) {
     str += `=== ${kMilestone} ===\n`;
-    arr = Object.keys(vQuals).sort((a, b) => b.length - a.length);
+//     arr = Object.keys(vQuals).sort((a, b) => b.length - a.length);
+    
+//     for (let i = 0; i < Math.min(5, arr.length); i++) {
+//       str += `\t${arr[i]}: \t\t${vQuals[arr[i]].length}\n`
+//       str += `\t\t${vQuals[arr[i]].join(', ')}\n`
+//     }
+    
+    arr = Object.entries(vQuals).sort((a, b) => b[1].length - a[1].length);
     
     for (let i = 0; i < Math.min(5, arr.length); i++) {
-      str += `\t${arr[i]}: \t\t${vQuals[arr[i]].length}\n`
-      str += `\t\t${vQuals[arr[i]].join(', ')}\n`
+      str += `\t${arr[i][0]}: *${vQuals[arr[i][0]].length}*\n`
+      str += `\t\t${vQuals[arr[i][0]].join(', ')}\n`
     }
   }
   
