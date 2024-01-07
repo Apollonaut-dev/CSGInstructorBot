@@ -23,8 +23,9 @@ export async function generate(present_modices) {
   const nROWS = sheet.rowCount;
   const nCOLS = sheet.columnCount;
   
-  const DATA_ROW_START = 5;
+  const DATA_ROW_START = 3;
   const DATA_COL_START = 3;
+  console.log(sheet.getCell(3,3).value)
 
   const PILOT_ROW = 1;
   const CaseIReQual = 3;
@@ -32,7 +33,7 @@ export async function generate(present_modices) {
   const QUAL_COL = 1;
 
   // get current pilot name strings from the pilot header row
-  const pilots = {}; 
+  const pilots = {};  
   const quals = {};
   
   let pilot;
@@ -49,6 +50,8 @@ export async function generate(present_modices) {
   let entry;
   let modex;
   
+  let arr;
+  
   for (let i = DATA_ROW_START; i < 122; i++) {
     milestone = sheet.getCell(i, 0).value;
     category = sheet.getCell(i, 1).value;
@@ -62,11 +65,11 @@ export async function generate(present_modices) {
     if (qual != null) prev_qual = qual;
     
     if (!quals[prev_milestone]) quals[prev_milestone] = {};
-    if (!quals[prev_milestone][prev_category]) quals[prev_milestone][prev_category] = {};
-    if (!quals[prev_milestone][prev_category][prev_qual]) quals[prev_milestone][prev_category][prev_qual] = [];
+    // if (!quals[prev_milestone][prev_category]) quals[prev_milestone][prev_category] = {};
+    // if (!quals[prev_milestone][prev_category][prev_qual]) quals[prev_milestone][prev_category][prev_qual] = [];
     
     // console.log(`${prev_milestone} | ${prev_category} | ${prev_qual}`);
-    
+    arr = [];
     for (let j = DATA_COL_START; j < nCOLS; j++) {
       entry = sheet.getCell(i, j).value;
       if (entry != 'NOGO' && entry != 'FOCUS') continue;
@@ -74,7 +77,13 @@ export async function generate(present_modices) {
       if (!pilot) continue;
       modex = Number(pilot.match(modex_regex));
       if (!present_modices.includes(modex)) continue;
-      quals[prev_milestone][prev_category][prev_qual].push(pilot);
+      arr.push(pilot)
+      // quals[prev_milestone][prev_category][prev_qual].push(pilot);
+    }
+    
+    if (arr.length) {
+      if (!quals[prev_milestone][prev_category]) quals[prev_milestone][prev_category] = {};
+      if (!quals[prev_milestone][prev_category][prev_qual]) quals[prev_milestone][prev_category][prev_qual] = arr;
     }
     // console.log(quals[prev_milestone][prev_category][prev_qual].join(', '))
   }
@@ -118,7 +127,7 @@ export async function generate(present_modices) {
     if (!pilot) continue;
     modex = Number(pilot.match(modex_regex));
     if (!present_modices.includes(modex)) continue;
-    needs_caseI.push(modex);
+    needs_caseI.push(pilot);
   }
   str += '\t\t' + needs_caseI.join(', ') + '\n'
   
@@ -134,8 +143,6 @@ export async function generate(present_modices) {
     // https://developers.google.com/sheets/api/guides/formats?hl=en
     qual_date = new Date(`${1899}-${12}-${30}`)
     qual_date.setDate(qual_date.getDate() + Number(entry))
-    
-    // const utc_qual = Date.UTC(qual_date.getFullYear(), qual_date.getMonth(), qual_date.getDate());
     const utc_qual = Date.UTC(1899, 12, 30 + Number(entry));
     
     diff = Math.floor(utc_today - utc_qual)/_MS_MONTH;
@@ -145,28 +152,19 @@ export async function generate(present_modices) {
     if (!pilot) continue;
     modex = Number(pilot.match(modex_regex));
     if (!present_modices.includes(modex)) continue;
-    needs_caseIII.push(modex);
+    needs_caseIII.push(pilot);
   }
   str += '\t\t' + needs_caseIII.join(', ') + '\n'
   
-  let arr;
+  arr = [];
   for (const [kMilestone, vQuals] of Object.entries(milestone_flattened)) {
     str += `=== ${kMilestone} ===\n`;
-//     arr = Object.keys(vQuals).sort((a, b) => b.length - a.length);
-    
-//     for (let i = 0; i < Math.min(5, arr.length); i++) {
-//       str += `\t${arr[i]}: \t\t${vQuals[arr[i]].length}\n`
-//       str += `\t\t${vQuals[arr[i]].join(', ')}\n`
-//     }
-    
-    arr = Object.entries(vQuals).sort((a, b) => b[1].length - a[1].length);
-    
+
     for (let i = 0; i < Math.min(5, arr.length); i++) {
       str += `\t${arr[i][0]}: *${vQuals[arr[i][0]].length}*\n`
       str += `\t\t${vQuals[arr[i][0]].join(', ')}\n`
     }
   }
   
-  console.log(str);
   return str;
 }
