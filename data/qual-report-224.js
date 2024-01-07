@@ -4,13 +4,13 @@ import serviceAccountAuth from "../services/google.js";
 import { modex_regex, qual_report_comparator } from './util.js';
 
 const GOOGLE_SHEET_ID_224 = "1G58gg-BKW-fpYPudBMDZztFism5FJ_OME9kvzvjxm2w";
-const TRAINING_SHEET_INDEX = 1;
+const TRAINING_SHEET_INDEX = 0;
 
 //testing
 generate([400, 401, 402, 403, 404, 405, 406, 407, 410, 411, 412, 413, 414, 415, 416, 417, 450, 451, 452, 453, 454, 456, 457, 460])
 
 // @param string[] present_modices -- array of strings containing 2-3 digit modices of each pilot present in the 224 Ready Room at the time of execution. If nil print training info for the entire roster
-// @returns string -- containing the generated report TODO consider returning an object so it can be formatted with discord message components
+// @returns string -- containing the generated report TODO consider returning the object so it can be formatted with discord message components
 export async function generate(present_modices) {
   const _MS_MONTH = 30*24*60*60*1000;
   const doc = new GoogleSpreadsheet(GOOGLE_SHEET_ID_224, serviceAccountAuth);
@@ -57,18 +57,13 @@ export async function generate(present_modices) {
     category = sheet.getCell(i, 1).value;
     qual = sheet.getCell(i, 2).value;
     
-    
-    // console.log(`${milestone}:${prev_milestone}`);
-    
     if (milestone != null) prev_milestone = milestone;
     if (category != null) prev_category = category;
     if (qual != null) prev_qual = qual;
     
     if (!quals[prev_milestone]) quals[prev_milestone] = {};
-    // if (!quals[prev_milestone][prev_category]) quals[prev_milestone][prev_category] = {};
-    // if (!quals[prev_milestone][prev_category][prev_qual]) quals[prev_milestone][prev_category][prev_qual] = [];
+    if (!quals[prev_milestone][prev_category]) quals[prev_milestone][prev_category] = {};
     
-    // console.log(`${prev_milestone} | ${prev_category} | ${prev_qual}`);
     arr = [];
     for (let j = DATA_COL_START; j < nCOLS; j++) {
       entry = sheet.getCell(i, j).value;
@@ -78,14 +73,11 @@ export async function generate(present_modices) {
       modex = Number(pilot.match(modex_regex));
       if (!present_modices.includes(modex)) continue;
       arr.push(pilot)
-      // quals[prev_milestone][prev_category][prev_qual].push(pilot);
     }
     
     if (arr.length) {
-      if (!quals[prev_milestone][prev_category]) quals[prev_milestone][prev_category] = {};
       if (!quals[prev_milestone][prev_category][prev_qual]) quals[prev_milestone][prev_category][prev_qual] = arr;
     }
-    // console.log(quals[prev_milestone][prev_category][prev_qual].join(', '))
   }
   let milestone_flattened = {};
   let flattened;
@@ -99,7 +91,7 @@ export async function generate(present_modices) {
   }
   
   let str = "**=== Upcoming and overdue CQ expiries ===**\n";
-  str += '\tCase I\n'
+  str += '\t*Case I*\n'
   const today = new Date();
   const utc_today = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate());
 
@@ -131,7 +123,7 @@ export async function generate(present_modices) {
   }
   str += '\t\t' + needs_caseI.join(', ') + '\n'
   
-  str += '\tCase III\n'
+  str += '\t*Case III*\n'
   
   let needs_caseIII = []
   for (let j = DATA_COL_START; j < nCOLS; j++) {
@@ -158,13 +150,12 @@ export async function generate(present_modices) {
   
   arr = [];
   for (const [kMilestone, vQuals] of Object.entries(milestone_flattened)) {
-    str += `=== ${kMilestone} ===\n`;
-
+    str += `**=== ${kMilestone} ===**\n`;
+    arr = Object.entries(vQuals).sort((a, b) => b[1].length - a[1].length)
     for (let i = 0; i < Math.min(5, arr.length); i++) {
-      str += `\t${arr[i][0]}: *${vQuals[arr[i][0]].length}*\n`
+      str += `\t*${arr[i][0]}: ${vQuals[arr[i][0]].length}*\n`
       str += `\t\t${vQuals[arr[i][0]].join(', ')}\n`
     }
   }
-  
   return str;
 }
