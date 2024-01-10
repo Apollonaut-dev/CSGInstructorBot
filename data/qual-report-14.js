@@ -59,12 +59,12 @@ export async function generate(present_modices) {
     
     console.log(`milestone: ${milestone}\ncategory: ${category}`)
     
-    if (milestone != null) prev_milestone = milestone;
+    if (milestone != 'null') prev_milestone = milestone;
     if (prev_milestone != milestone) {
       category = sheet.getCell(i+1, 1).value
       continue;
     }
-    // if (category != null) prev_category = category;
+    if (category != null) prev_category = category;
     if (qual != null) prev_qual = qual;
     
     if (!quals[prev_milestone]) quals[prev_milestone] = {};
