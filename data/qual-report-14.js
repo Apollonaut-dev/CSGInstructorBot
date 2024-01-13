@@ -163,6 +163,7 @@ export async function generate(present_modices) {
       str += `\t\t${vQuals[arr[i][0]].join(', ')}\n`
     }
   }
+  console.log('done..')
   console.log(str)
   return str;
 }
