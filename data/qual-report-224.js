@@ -1,4 +1,5 @@
 import { GoogleSpreadsheet } from "google-spreadsheet";
+import { inspect } from 'util';
 import serviceAccountAuth from "../services/google.js";
 
 import { modex_regex, qual_report_comparator } from './util.js';
@@ -7,6 +8,7 @@ const GOOGLE_SHEET_ID_224 = "1G58gg-BKW-fpYPudBMDZztFism5FJ_OME9kvzvjxm2w";
 const TRAINING_SHEET_INDEX = 0;
 
 //testing
+console.log("Testing 224...")
 generate([400, 401, 402, 403, 404, 405, 406, 407, 410, 411, 412, 413, 414, 415, 416, 417, 450, 451, 452, 453, 454, 456, 457, 460])
 
 // @param string[] present_modices -- array of strings containing 2-3 digit modices of each pilot present in the 224 Ready Room at the time of execution. If nil print training info for the entire roster
@@ -25,7 +27,7 @@ export async function generate(present_modices) {
   
   const DATA_ROW_START = 5;
   const DATA_COL_START = 3;
-  console.log(sheet.getCell(3,nCOLS-1).value)
+  // console.log(`sheet.getCell(3,${nCOLS-1}).value = ${sheet.getCell(3,nCOLS-1).value}`);
 
   const PILOT_ROW = 1;
   const CaseIReQual = 3;
@@ -124,7 +126,10 @@ export async function generate(present_modices) {
   str += '\t\t' + needs_caseI.join(', ') + '\n'
   
   str += '\t*Case III*\n'
-  
+  // console.log(inspect(milestone_flattened, {
+  //   depth: null,
+  //   colorized: true
+  // }));
   let needs_caseIII = []
   for (let j = DATA_COL_START; j < nCOLS; j++) {
     
@@ -147,7 +152,10 @@ export async function generate(present_modices) {
     needs_caseIII.push(pilot);
   }
   str += '\t\t' + needs_caseIII.join(', ') + '\n'
-  
+  // console.log(inspect(milestone_flattened, {
+  //   depth: null,
+  //   colorized: true
+  // }));
   arr = [];
   for (const [kMilestone, vQuals] of Object.entries(milestone_flattened)) {
     str += `**=== ${kMilestone} ===**\n`;
@@ -156,6 +164,31 @@ export async function generate(present_modices) {
       str += `\t*${arr[i][0]}: ${vQuals[arr[i][0]].length}*\n`
       str += `\t\t${vQuals[arr[i][0]].join(', ')}\n`
     }
+    console.log(inspect(milestone_flattened, {
+      depth: null,
+      colorized: true
+    }));
+    console.log(inspect(arr.map(e => {
+      return [e[0], e[1].length]
+    }), {
+      depth: null,
+      colorizeD: true
+    }));
+    console.log("=============== MILESTONE BOUNDARY =================")
   }
+  // console.log(inspect(milestone_flattened, {
+  //   depth: null,
+  //   colorized: true
+  // }));
+  // console.log(inspect(arr.map(e => {
+  //   return [e[0], e[1].length]
+  // }), {
+  //   depth: null,
+  //   colorizeD: true
+  // }));
+  // console.log(inspect(quals, {
+  //   depth: null,
+  //   colorize: true
+  // }));
   return str;
 }

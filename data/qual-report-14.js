@@ -7,7 +7,7 @@ const GOOGLE_SHEET_ID_14= "1TJeKiydkGcYFiCVivzvw5DO-1bTen_GMorU0U8e61OE";
 const TRAINING_SHEET_INDEX = 0;
 
 //testing
-generate([901, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216])
+// generate([901, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216])
 
 // @param string[] present_modices -- array of strings containing 2-3 digit modices of each pilot present in the 224 Ready Room at the time of execution. If nil print training info for the entire roster
 // @returns string -- containing the generated report TODO consider returning the object so it can be formatted with discord message components
